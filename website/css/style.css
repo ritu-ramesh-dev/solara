@@ -61,29 +61,32 @@ a { color: inherit; }
 
 main, .close { position: relative; z-index: 1; }
 
-/* ---- home: the 3D stage ---------------------------------------------------------------- */
-#stage {
-  position: fixed; inset: 0; width: 100vw; height: 100lvh; z-index: 0;
-  opacity: 0; transition: opacity 1.6s var(--ease-out);
-  cursor: grab;
-}
-.stage-ready #stage { opacity: 1; }
-.dragging #stage { cursor: grabbing; }
-.dragging, .dragging * { user-select: none; -webkit-user-select: none; }
-.hero-copy { user-select: none; -webkit-user-select: none; }
-
+/* ---- home: opening film -------------------------------------------------------------- */
 .hero {
-  min-height: 100svh; position: relative;
+  min-height: 100svh; position: relative; overflow: hidden; isolation: isolate;
   display: flex; align-items: flex-end; justify-content: center;
-  padding: 0 var(--margin) clamp(40px, 7vh, 88px);
-  text-align: center;
-  pointer-events: none;           /* drags reach the 3D canvas behind */
+  padding: 0 var(--margin) clamp(48px, 9vh, 104px);
+  text-align: center; background: var(--ground);
 }
-.hero a, .hero button, .hero label, .hero input, .hero fieldset { pointer-events: auto; }
+.hero-media { position: absolute; inset: 0; z-index: -1; will-change: transform; }
+.hero-video {
+  width: 100%; height: 100%; object-fit: cover; object-position: 60% center; display: block;
+  filter: saturate(0.92) contrast(1.06);
+  animation: drift 26s var(--ease-out) both;
+}
+/* Neutral scrim so the title reads over the footage: darker at the edges and
+   toward the foot of the screen, where the page continues. */
+.hero-media::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 40%, rgb(5 5 5 / 0) 35%, rgb(5 5 5 / 0.55) 100%), /* taste-skill-ignore: neutral scrim over footage */
+    linear-gradient(to bottom, rgb(5 5 5 / 0.6) 0%, rgb(5 5 5 / 0.1) 22%, rgb(5 5 5 / 0.55) 70%, rgb(5 5 5 / 1) 100%); /* taste-skill-ignore: neutral scrim over footage */
+}
+@keyframes drift { from { transform: scale(1.08); } to { transform: scale(1); } }
 .hero-copy { max-width: 1100px; }
 .title {
   margin: 0;
-  font: 300 clamp(68px, 12.5vw, 210px)/0.9 var(--display);
+  font: 300 clamp(72px, 15vw, 260px)/0.85 var(--display);
   letter-spacing: 0.16em; text-transform: uppercase;
   margin-right: -0.16em;
 }
@@ -100,28 +103,18 @@ main, .close { position: relative; z-index: 1; }
 }
 .button:hover { transform: translateY(-2px); background: #f7d593; }
 .button:active { transform: translateY(0) scale(0.98); }
-.hint { margin: 0; font-size: 14px; color: var(--ink-2); }
-
-/* Dust control, bottom-left of the hero. */
-.hud {
-  position: absolute; left: var(--margin); bottom: clamp(40px, 7vh, 88px);
-  max-width: 300px; text-align: left;
+.video-toggle {
+  position: absolute; right: var(--margin); bottom: clamp(24px, 4vh, 40px);
+  background: rgb(5 5 5 / 0.55); color: var(--ink); border: 0; cursor: pointer;
+  padding: 10px 16px; font: 500 14px/1 var(--text);
+  transition: background-color 0.3s, color 0.3s;
 }
-.soil-picker { border: 0; margin: 0; padding: 0; min-width: 0; }
-.soil-picker legend { font: 400 21px/1.2 var(--display); margin-bottom: 10px; padding: 0; }
-.soil-options { display: flex; flex-wrap: wrap; gap: 6px; }
-.soil-options label { position: relative; cursor: pointer; }
-.soil-options input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
-.soil-options span {
-  display: block; padding: 9px 13px; background: rgb(22 22 20 / 0.85); font-size: 14px; font-weight: 500;
-  transition: background-color 0.3s, color 0.3s, transform 0.3s var(--ease-out);
-}
-.soil-options label:hover span { background: #2a2925; }
-.soil-options input:checked + span { background: var(--ink); color: var(--ground); }
-.soil-options input:focus-visible + span { outline: 2px solid var(--sun); outline-offset: 3px; }
-.soil-options label:active span { transform: scale(0.97); }
-.soil-readout { margin: 12px 0 0; font-size: 14px; color: var(--ink-2); }
-.soil-readout strong { color: var(--sun); font-weight: 600; }
+.video-toggle:hover { background: var(--ink); color: var(--ground); }
+.hero-copy > * { animation: rise 1s var(--ease-out) both; }
+.hero-copy > *:nth-child(2) { animation-delay: 0.12s; }
+.hero-copy > *:nth-child(3) { animation-delay: 0.24s; }
+.hero-copy > .title { animation: none; }
+@keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
 
 /* ---- home: chapters ---------------------------------------------------------------------- */
 .chapters { background: var(--ground-2); padding: var(--gap-section) var(--margin) var(--gap-section); }
@@ -342,17 +335,16 @@ main > section h2 { margin: 0; font: 300 clamp(44px, 6vw, 86px)/1 var(--display)
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
+  .hero-video, .hero-copy > * { animation: none; }
 }
 
 /* ---- narrow screens ------------------------------------------------------------------------- */
 @media (max-width: 860px) {
   .bar { flex-wrap: wrap; row-gap: 4px; background: rgb(5 5 5 / 0.9); }
+  .video-toggle { bottom: 16px; }
   .bar nav { order: 3; width: 100%; gap: 22px; overflow-x: auto; }
   .bar-action { font-size: 14px; }
   .page main { padding-top: 112px; }
-  .hero { padding-bottom: 210px; }
-  .hud { left: var(--margin); right: var(--margin); bottom: 24px; max-width: none; }
-  .hint { display: none; }
   .chapters-head, .page-head, .results-body, .data, .why-body, .power, .schedule-body,
   .project-grid, .method-grid, .credit-list { grid-template-columns: 1fr; }
   .chapter-list a { grid-template-columns: 1fr; gap: 12px; }

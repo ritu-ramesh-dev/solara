@@ -10,16 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <script type="importmap">
-    { "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
-    } }
-  </script>
 </head>
 <body class="home">
-  <canvas id="stage" aria-label="A 3D solar panel. Drag to turn it."></canvas>
-
   <header class="bar">
     <a class="wordmark" href="./" aria-current="page">Solara</a>
     <nav aria-label="Pages">
@@ -33,27 +25,20 @@
 
   <main>
     <section class="hero" id="top">
+      <div class="hero-media" aria-hidden="true">
+        <video class="hero-video" id="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/video/hero-poster.jpg">
+          <source src="assets/video/hero-1280.mp4" type="video/mp4" media="(max-width: 900px)">
+          <source src="assets/video/hero-1920.mp4" type="video/mp4">
+        </video>
+      </div>
       <div class="hero-copy">
         <h1 class="title">Solara</h1>
         <p class="lede">AI that finds dust on solar panels, measures the power it costs, and says when cleaning is worth it.</p>
         <div class="hero-actions">
           <a class="button" href="#chapters">Explore the project</a>
-          <p class="hint">Drag to turn the panel. Move the cursor to steer the sun.</p>
         </div>
       </div>
-      <div class="hud">
-        <fieldset class="soil-picker">
-          <legend>Dust on the glass</legend>
-          <div class="soil-options">
-            <label><input type="radio" name="soil" value="bhadla" checked><span>Bhadla now</span></label>
-            <label><input type="radio" name="soil" value="0"><span>Clean</span></label>
-            <label><input type="radio" name="soil" value="10"><span>Light</span></label>
-            <label><input type="radio" name="soil" value="22"><span>Moderate</span></label>
-            <label><input type="radio" name="soil" value="40"><span>Heavy</span></label>
-          </div>
-          <p class="soil-readout" id="soil-readout" aria-live="polite">Dust level from Module 3's simulation of Bhadla Solar Park.</p>
-        </fieldset>
-      </div>
+      <button class="video-toggle" id="video-toggle" type="button" aria-pressed="false">Pause film</button>
     </section>
 
     <section class="chapters" id="chapters" aria-labelledby="chapters-title">
@@ -102,7 +87,7 @@
     <p class="close-name" aria-hidden="true">Solara</p>
     <div class="close-meta">
       <p>Ritu Ramesh, with Dr. Gargi. B.Tech Artificial Intelligence and Data Science, Amrita Vishwa Vidyapeetham.</p>
-      <p>Data, photographs and the desert-dusk light in the 3D scene are credited on the <a href="about.html#credits">About page</a>.</p>
+      <p>Opening film: Roman Odintsov on Pexels. Data and photographs are credited on the <a href="about.html#credits">About page</a>.</p>
     </div>
   </footer>
 

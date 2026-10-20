@@ -1,69 +1,47 @@
-// Home page: the 3D panel, its dust, and the chapter figures.
+// Home page: the opening film and the chapter figures.
 import { loadJSON, pct } from "./site.js";
 
-let scene = null;
-const pending = { level: null };
+// ---- opening film: pausable, still for people who ask for reduced motion ----------
+const video = document.getElementById("hero-video");
+const toggle = document.getElementById("video-toggle");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)");
 
-// Soiling loss (% of power) -> how thick the dust layer looks on the glass.
-const lossToDust = (lossPct) => Math.min(1, Math.pow(Math.max(lossPct, 0) / 34, 0.85));
+function setPlaying(play) {
+  if (play) video.play().catch(() => {});
+  else video.pause();
+  toggle.textContent = play ? "Pause film" : "Play film";
+  toggle.setAttribute("aria-pressed", String(!play));
+}
+if (reduce.matches) setPlaying(false);
+toggle.addEventListener("click", () => setPlaying(video.paused));
+video.addEventListener("playing", () => document.body.classList.add("film-ready"), { once: true });
 
-function setDust(level) {
-  if (scene) scene.setSoiling(level);
-  else pending.level = level;
+// Pause the film while it is scrolled out of view, to spare battery.
+if ("IntersectionObserver" in window) {
+  new IntersectionObserver(([e]) => {
+    if (toggle.getAttribute("aria-pressed") === "true") return;
+    if (e.isIntersecting) video.play().catch(() => {});
+    else video.pause();
+  }).observe(video);
 }
 
-function hasWebGL() {
-  try {
-    const c = document.createElement("canvas");
-    return !!(c.getContext("webgl2") || c.getContext("webgl"));
-  } catch { return false; }
+// Slight parallax: the film drifts slower than the page.
+if (!reduce.matches) {
+  const media = document.querySelector(".hero-media");
+  addEventListener("scroll", () => {
+    const y = Math.min(scrollY, innerHeight);
+    media.style.transform = `translate3d(0, ${y * 0.35}px, 0)`;
+  }, { passive: true });
 }
 
-if (hasWebGL()) {
-  import("./scene.js")
-    .then(({ startScene }) => {
-      scene = startScene(document.getElementById("stage"), {
-        onReady: () => document.body.classList.add("stage-ready"),
-      });
-      if (pending.level != null) scene.setSoiling(pending.level);
-    })
-    .catch((err) => { console.error(err); document.body.classList.add("no-webgl"); });
-} else {
-  document.body.classList.add("no-webgl");
-}
-
-// ---- dust: Bhadla as simulated by Module 3, or a chosen class -------------------
-const readout = document.getElementById("soil-readout");
-const LABELS = { 0: "Clean glass: under 5% of power lost.", 10: "Light soiling: 5 to 15% of power lost.", 22: "Moderate soiling: 15 to 30% of power lost.", 40: "Heavy soiling: over 30% of power lost." };
-let bhadla = null;
-const fmtDate = (s) => new Date(`${s}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
-
-function applyChoice(value) {
-  if (value === "bhadla") {
-    if (!bhadla) return;
-    setDust(lossToDust(bhadla.loss));
-    readout.innerHTML = `Bhadla Solar Park, ${fmtDate(bhadla.date)}: <strong>${bhadla.loss.toFixed(1)}%</strong> of power lost, as simulated by Module 3. <a href="schedule.html">Next wash</a>`;
-  } else {
-    setDust(lossToDust(+value));
-    readout.textContent = LABELS[value];
-  }
-}
-for (const input of document.querySelectorAll('input[name="soil"]')) {
-  input.addEventListener("change", () => applyChoice(input.value));
-}
-
-loadJSON("data/schedule.json").then((d) => {
-  const rec = d.sites.bhadla.recommendation;
-  bhadla = { loss: rec.loss_on_that_day_pct, date: rec.next_wash };
-  const checked = document.querySelector('input[name="soil"]:checked');
-  applyChoice(checked ? checked.value : "bhadla");
-  document.querySelector('[data-home="saving"]').textContent = `${Math.round(d.summary.solara.saving_vs_fixed_pct)}%`;
-}).catch(() => applyChoice("10"));
-
+// ---- chapter figures from the models' own results ------------------------------------
 loadJSON("data/results.json").then((d) => {
   document.querySelector('[data-home="accuracy"]').textContent = pct(d.metrics.accuracy);
 }).catch(() => {});
 loadJSON("data/powerloss.json").then((d) => {
   const best = d.models.find((m) => m.key === d.best_model);
   document.querySelector('[data-home="mae"]').textContent = best.mae.toFixed(1);
+}).catch(() => {});
+loadJSON("data/schedule.json").then((d) => {
+  document.querySelector('[data-home="saving"]').textContent = `${Math.round(d.summary.solara.saving_vs_fixed_pct)}%`;
 }).catch(() => {});
