@@ -11,3 +11,5 @@ pillow
 tqdm
 gdown
 xgboost
+stable-baselines3
+gymnasium

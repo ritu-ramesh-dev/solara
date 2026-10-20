@@ -8,7 +8,7 @@ Dust, pollen and bird droppings on photovoltaic panels cut their output, sometim
 |---|---|---|
 | 1. Detect | CNN that classifies a panel image by soiling severity | Done |
 | 2. Predict | Regression of the exact power loss (%) caused by the soiling | Done |
-| 3. Schedule | Cost-benefit / learned cleaning schedule vs. fixed-interval baseline | Planned |
+| 3. Schedule | Cost-benefit / learned cleaning schedule vs. fixed-interval baseline, at five Indian solar parks | Done |
 
 The project website (`website/`) is a single page with a real-time 3D solar panel lit by a sun that follows your cursor.
 
@@ -150,6 +150,71 @@ python -m module2_powerloss.export_site    # publish to the website
 python -m module2_powerloss.predict panel.jpg --irradiance 0.45 --time 12:30
 ```
 
+## Module 3: intelligent cleaning scheduling (India)
+
+Module 3 decides **each morning whether to wash the panels**. It is tested on five utility-scale Indian solar parks with 20 years of real daily weather.
+
+### Sites and data
+
+| Park | Rain (mm/yr) | Dry-day soiling (%/day) | 15-day schedule (₹/MW/yr) | Solara (₹/MW/yr) | Saving | Solara washes/yr | Next wash (as of 31 Dec 2024) |
+|---|---|---|---|---|---|---|---|
+| Bhadla Solar Park, Rajasthan | 377 | 0.40 | ₹318,424 | ₹223,438 | 29.8% | 8.2 | 2025-01-01 |
+| Charanka Solar Park, Gujarat | 701 | 0.38 | ₹309,993 | ₹216,794 | 30.1% | 7.8 | 2025-01-11 |
+| Rewa Ultra Mega Solar, Madhya Pradesh | 1,051 | 0.48 | ₹306,291 | ₹179,879 | 41.3% | 5.9 | 2025-01-18 |
+| Kurnool Ultra Mega Solar Park, Andhra Pradesh | 726 | 0.53 | ₹323,532 | ₹186,057 | 42.5% | 6.4 | 2025-01-15 |
+| Pavagada Solar Park, Karnataka | 754 | 0.45 | ₹308,512 | ₹166,681 | 46.0% | 6.1 | 2025-01-17 |
+
+- **Weather:** [NASA POWER](https://power.larc.nasa.gov/) daily irradiance, rain, temperature, humidity, wind and aerosol optical depth (AOD) for each park, 2005 to 2024 (`weather.py`). Policies are **tuned on 2005 to 2019** and **tested on 2020 to 2024**.
+- **Soiling physics:** on dry days dust adds a loss proportional to that day's AOD, scaled so the average across the five parks is **0.40 %/day**, the middle of Indian field measurements: Delhi 0.3 to 0.6 %/day ([Renewable Watch](https://renewablewatch.in/2018/12/22/soiling-analysis/)), Gandhinagar 0.37 ± 0.09 %/day ([pv magazine India](https://www.pv-magazine-india.com/?p=4339)), north India up to 0.47 %/day ([PMC](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12658225/)). Rain of 5 mm or more washes off 90% of the dust, and 1 to 5 mm washes off 40%.
+- **Energy:** daily irradiance × 1 MWp × performance ratio 0.8.
+- **Money:** lost energy valued at **₹2.6/kWh** (recent SECI auction level). One manual wash of 1 MWp costs **₹9,500**: ₹8,000 of labour plus 15,000 L of water at ₹0.10/L. Indian reports give 7,000 to 24,000 L per MW per wash and ₹1 to 7.5 lakh per MW per year for cleaning ([pv magazine India](https://www.pv-magazine-india.com/2018/10/02/study-high-risk-through-water-use-in-solar-sector), [Mercom](https://mercomindia.com/robotic-cleaning-solar-modules-gaining-traction-india)).
+
+### The sensor: Modules 1 and 2 in the loop
+
+The scheduler never sees the true soiling. Each day the camera's midday photos go through **Module 2's CNN** and are averaged. The simulated reading carries Module 2's **measured** daily-average error at that soiling level: on nearly clean panels a bias of about +2.4 points with 1.3 points of day-to-day spread, growing at heavier soiling. The operator re-zeroes the reading the morning after each wash, when the panels are known to be clean, and smooths it with an exponential average that also learns the site's soiling rate.
+
+### Policies
+
+| Policy | Rule |
+|---|---|
+| Fixed interval | wash every N days; 15 is common practice, and N is also tuned per site |
+| Threshold | wash when the estimated loss passes θ % (θ tuned per site) |
+| **Solara cost-benefit** | wash when (estimated loss − residual) × expected daily energy × tariff × H days is greater than the cost of a wash; H is shortened if the 3-day forecast shows ≥5 mm of rain, which will clean the panels for free |
+| PPO (An, 2025) | reinforcement-learning agent (stable-baselines3) that sees the same inputs; reward = −(lost revenue + washing cost); trained on 2005 to 2019 at all five parks |
+| Hindsight optimum | dynamic programming with the true loss and all future weather known. No real policy can beat it; it measures how much room is left |
+
+### Results (test years 2020 to 2024, average of five parks, per MWp per year, 5 noise seeds)
+
+| Policy | Washes | Water (kL) | Energy lost (MWh) | Total cost | vs 15-day | Above optimum |
+|---|---|---|---|---|---|---|
+| Rain only (never wash) | 0.0 | 0 | 168.1 | ₹437,012 | +39.5% | 146.9% |
+| Fixed, every 15 days (common practice) | 24.2 | 363 | 32.1 | ₹313,350 | – | 77.0% |
+| Fixed interval, tuned per site | 9.8 | 148 | 61.5 | ₹253,317 | −19.2% | 43.1% |
+| Threshold on Module 2 estimate, tuned | 7.6 | 114 | 48.5 | ₹198,184 | −36.8% | 12.0% |
+| **Solara cost-benefit + rain forecast** | 6.9 | 103 | 49.7 | ₹194,570 | −37.9% | 9.9% |
+| PPO reinforcement learning | 5.6 | 85 | 53.9 | ₹193,579 | −38.3% | 9.4% |
+| Hindsight optimum (knows the future) | 6.6 | 98 | 44.1 | ₹177,002 | −43.5% | 0.0% |
+
+![Cost by policy](module3_scheduling/outputs/cost_by_policy.png)
+![Bhadla 2023](module3_scheduling/outputs/timeline_bhadla.png)
+
+**Reading the results.**
+- Washing on the panel's actual condition, rather than the calendar, cuts the yearly cost of soiling by **38%** compared with the common 15-day routine. That is about **₹118,780 per MW per year** with **17 fewer washes** and about **260 kL less water** per MW per year. Even the best tuned calendar saves only 19%.
+- Solara ends up **within 10% of the hindsight optimum**. PPO performs about the same (9.4% above the optimum), and a tuned threshold rule comes close (12%). Most of the gain comes from using a condition sensor (Modules 1 and 2) at all. The cost-benefit rule adds a little on top, with the advantage that it is transparent: every wash comes with a rupee justification.
+- The remaining gap is mostly due to the sensor. Module 2 under-reads moderate soiling (5 to 15%), so washes sometimes come a few days late. A better Module 2 in that range would directly improve scheduling.
+- **Sensitivity:** ₹4,750 per wash: 22% saving · ₹9,500 per wash: 38% saving · ₹19,000 per wash: 55% saving. The more a wash costs, the more it pays to wash only when needed.
+
+### Run it
+
+```bash
+python -m module3_scheduling.weather       # download NASA POWER weather for the five parks
+python -m module3_scheduling.rl            # train the PPO scheduler (about 10 min, CPU)
+python -m module3_scheduling.evaluate      # tune on 2005-2019, test on 2020-2024, figures
+python -m module3_scheduling.export_site   # publish to the website
+```
+
+All assumptions (tariff, wash cost, water, soiling rate, rain thresholds, sites) are in [`module3_scheduling/config.py`](module3_scheduling/config.py).
+
 ---
 
 ## Website
@@ -166,6 +231,7 @@ Built with three.js. The solar panel is generated procedurally: 60 monocrystalli
 ```
 module1_detection/   data preparation, model, training, evaluation, prediction
 module2_powerloss/   power-loss regression: CNN, Random Forest, XGBoost, baselines
+module3_scheduling/  cleaning scheduler: soiling simulator, policies, PPO, hindsight optimum
   outputs/           metrics.json, confusion matrix, training curves, sample predictions
 website/             project website (three.js)
 data/                dataset (downloaded, not committed)
@@ -175,6 +241,9 @@ data/                dataset (downloaded, not committed)
 
 1. S. Mehta, A. P. Azad, S. A. Chemmengath, V. Raykar, S. Kalyanaraman, "DeepSolarEye: Power Loss Prediction and Weakly Supervised Soiling Localization via Fully Convolutional Networks for Solar Panels," *WACV*, 2018.
 2. M. Sandler, A. Howard, M. Zhu, A. Zhmoginov, L.-C. Chen, "MobileNetV2: Inverted Residuals and Linear Bottlenecks," *CVPR*, 2018.
+3. H. An, "Reinforcement learning-based dynamic cleaning scheduling framework for solar energy system," Kumoh National Institute of Technology, 2025.
+4. S. Manoj and M. Dai, "Neural Network-Based Optimization of PV Output Power Through Adaptive Cleaning Schedules," *NHSJS*, 2025.
+5. NASA Langley Research Center, POWER Project, daily data (power.larc.nasa.gov).
 
 ## Author
 

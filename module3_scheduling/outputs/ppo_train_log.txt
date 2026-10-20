@@ -1,0 +1,10 @@
+  50000 steps | mean episode cost  80.72 washes-worth
+ 100000 steps | mean episode cost  30.47 washes-worth
+ 150000 steps | mean episode cost  24.09 washes-worth
+ 200000 steps | mean episode cost  22.76 washes-worth
+ 250000 steps | mean episode cost  22.69 washes-worth
+ 300000 steps | mean episode cost  21.53 washes-worth
+ 350000 steps | mean episode cost  21.83 washes-worth
+ 400000 steps | mean episode cost  21.97 washes-worth
+Saved C:\Users\RITU RAMESH\Documents\PROJECTS\COMPUTATIONAL MECHANICS\solara\module3_scheduling\outputs\ppo_scheduler.zip
+EXIT 0

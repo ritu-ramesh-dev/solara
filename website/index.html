@@ -27,6 +27,7 @@
       <a href="#why">Why</a>
       <a href="#results">Detection</a>
       <a href="#power">Power loss</a>
+      <a href="#schedule">Schedule</a>
       <a href="#data">Data</a>
     </nav>
     <a class="bar-action" href="https://github.com/ritu-ramesh-dev/solara">Code on GitHub</a>
@@ -73,8 +74,8 @@
         </div>
 
         <div role="tabpanel" id="pane-schedule" aria-labelledby="tab-schedule" class="pane" hidden>
-          <p>Then Solara weighs the energy a cleaning would win back against the water, labour and downtime it costs, and books the cleaning only when it pays.</p>
-          <p class="status">In progress: Module 3, compared against fixed-interval and threshold cleaning.</p>
+          <p>Then Solara weighs the energy a wash would win back against the water and labour it costs, waits when the forecast shows rain that will wash the panels for free, and books the wash only when it pays.</p>
+          <p class="status" id="schedule-status">Tested at five Indian solar parks against fixed-interval washing. <a href="#schedule">See the parks</a>.</p>
         </div>
       </div>
     </section>
@@ -134,6 +135,34 @@
       </figure>
     </section>
 
+    <section class="schedule" id="schedule" aria-labelledby="schedule-title">
+      <div class="schedule-head">
+        <h2 id="schedule-title">When to wash, park by park</h2>
+        <p class="section-lede" id="schedule-lede">Module 3 decides each morning whether washing the panels is worth it, using Module 2's reading of the dust, the expected sunshine and a three-day rain forecast. Simulated on twenty years of real weather at five Indian solar parks.</p>
+      </div>
+      <div class="park-picker" role="radiogroup" aria-label="Solar park" id="park-picker"></div>
+      <div class="schedule-body">
+        <figure class="timeline">
+          <svg id="timeline" viewBox="0 0 760 320" role="img" aria-labelledby="timeline-caption"></svg>
+          <figcaption id="timeline-caption">Soiling loss through one year. Ticks under the chart mark washes; blue bars are rain.</figcaption>
+        </figure>
+        <div class="park-facts">
+          <p class="park-name" id="park-name">–</p>
+          <div class="park-figures">
+            <p><span class="fig-num" id="park-saving">–</span> <span class="fig-label">saved per MW each year compared with washing every 15 days</span></p>
+            <p><span class="fig-num" id="park-washes">–</span> <span class="fig-label" id="park-washes-label">washes a year</span></p>
+            <p><span class="fig-num" id="park-water">–</span> <span class="fig-label">litres of water saved per MW each year</span></p>
+          </div>
+          <p class="park-next" id="park-next"></p>
+        </div>
+      </div>
+      <table class="models policies">
+        <caption id="policies-caption">Every policy at this park, test years 2020 to 2024</caption>
+        <thead><tr><th scope="col">Policy</th><th scope="col">Washes a year</th><th scope="col">Energy lost (MWh)</th><th scope="col">Cost a year (₹)</th><th scope="col">vs 15-day</th></tr></thead>
+        <tbody id="policies-body"><tr><td colspan="5">Results are on their way.</td></tr></tbody>
+      </table>
+    </section>
+
     <section class="data" id="data" aria-labelledby="data-title">
       <div class="data-copy">
         <h2 id="data-title">Trained on DeepSolarEye</h2>
@@ -158,10 +187,11 @@
     <p class="close-name" aria-hidden="true">Solara</p>
     <div class="close-meta">
       <p>Ritu Ramesh, with Dr. Gargi. B.Tech Artificial Intelligence and Data Science, Amrita Vishwa Vidyapeetham.</p>
-      <p>Images and power-loss labels: DeepSolarEye dataset, Mehta et al., WACV 2018, used under CC BY-NC-SA. Photographs via Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:AMP_Energy_Bhadla_Solar_Power_Plant_-_53700156579.jpg">"AMP Energy Bhadla Solar Power Plant"</a> by Sarvajanik Puralekh, CC BY-SA 2.0; <a href="https://commons.wikimedia.org/wiki/File:Cleaning_solar_panel.jpg">"Cleaning solar panel"</a> by Deo photographer, CC BY-SA 4.0. Panel rendered in three.js.</p>
+      <p>Images and power-loss labels: DeepSolarEye dataset, Mehta et al., WACV 2018, used under CC BY-NC-SA. Photographs via Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:AMP_Energy_Bhadla_Solar_Power_Plant_-_53700156579.jpg">"AMP Energy Bhadla Solar Power Plant"</a> by Sarvajanik Puralekh, CC BY-SA 2.0; <a href="https://commons.wikimedia.org/wiki/File:Cleaning_solar_panel.jpg">"Cleaning solar panel"</a> by Deo photographer, CC BY-SA 4.0. Weather: NASA Langley Research Center POWER Project. Panel rendered in three.js.</p>
     </div>
   </footer>
 
   <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/schedule.js"></script>
 </body>
 </html>

@@ -1,0 +1,60 @@
+Soiling constant k = 0.881 %/day per unit AOD; one wash = Rs 9,500 per MWp
+
+Bhadla Solar Park (Rajasthan)
+  Rain only (never wash)                     washes   0.0/yr  lost  184.9 MWh  cost Rs   480,671/yr  vs 15-day  -51.0%
+  Fixed, every 15 days                       washes  24.2/yr  lost   34.1 MWh  cost Rs   318,424/yr  vs 15-day   +0.0%
+  Fixed, every 28 days                       washes  13.0/yr  lost   56.0 MWh  cost Rs   268,981/yr  vs 15-day  +15.5%
+  Threshold, 6.5% loss                       washes   9.5/yr  lost   52.2 MWh  cost Rs   226,201/yr  vs 15-day  +29.0%
+  Solara cost-benefit (horizon 13 d)         washes   8.2/yr  lost   56.0 MWh  cost Rs   223,438/yr  vs 15-day  +29.8%
+  PPO reinforcement learning                 washes   6.3/yr  lost   63.6 MWh  cost Rs   225,393/yr  vs 15-day  +29.2%
+  Hindsight optimum (knows the future)       washes   7.6/yr  lost   50.0 MWh  cost Rs   202,168/yr  vs 15-day  +36.5%
+
+Charanka Solar Park (Gujarat)
+  Rain only (never wash)                     washes   0.0/yr  lost  213.6 MWh  cost Rs   555,405/yr  vs 15-day  -79.2%
+  Fixed, every 15 days                       washes  24.2/yr  lost   30.8 MWh  cost Rs   309,993/yr  vs 15-day   +0.0%
+  Fixed, every 30 days                       washes  12.0/yr  lost   52.3 MWh  cost Rs   249,834/yr  vs 15-day  +19.4%
+  Threshold, 6.5% loss                       washes   8.5/yr  lost   53.1 MWh  cost Rs   218,878/yr  vs 15-day  +29.4%
+  Solara cost-benefit (horizon 13 d)         washes   7.8/yr  lost   54.7 MWh  cost Rs   216,794/yr  vs 15-day  +30.1%
+  PPO reinforcement learning                 washes   6.3/yr  lost   60.6 MWh  cost Rs   217,242/yr  vs 15-day  +29.9%
+  Hindsight optimum (knows the future)       washes   8.6/yr  lost   43.8 MWh  cost Rs   195,662/yr  vs 15-day  +36.9%
+
+Rewa Ultra Mega Solar (Madhya Pradesh)
+  Rain only (never wash)                     washes   0.0/yr  lost  139.1 MWh  cost Rs   361,675/yr  vs 15-day  -18.1%
+  Fixed, every 15 days                       washes  24.2/yr  lost   29.4 MWh  cost Rs   306,291/yr  vs 15-day   +0.0%
+  Fixed, every 45 days                       washes   8.0/yr  lost   61.3 MWh  cost Rs   235,416/yr  vs 15-day  +23.1%
+  Threshold, 6.5% loss                       washes   8.1/yr  lost   41.0 MWh  cost Rs   183,397/yr  vs 15-day  +40.1%
+  Solara cost-benefit (horizon 12 d)         washes   5.9/yr  lost   47.7 MWh  cost Rs   179,879/yr  vs 15-day  +41.3%
+  PPO reinforcement learning                 washes   5.3/yr  lost   48.4 MWh  cost Rs   175,861/yr  vs 15-day  +42.6%
+  Hindsight optimum (knows the future)       washes   5.8/yr  lost   40.8 MWh  cost Rs   161,179/yr  vs 15-day  +47.4%
+
+Kurnool Ultra Mega Solar Park (Andhra Pradesh)
+  Rain only (never wash)                     washes   0.0/yr  lost  156.0 MWh  cost Rs   405,645/yr  vs 15-day  -25.4%
+  Fixed, every 15 days                       washes  24.2/yr  lost   36.0 MWh  cost Rs   323,532/yr  vs 15-day   +0.0%
+  Fixed, every 39 days                       washes   9.2/yr  lost   69.4 MWh  cost Rs   267,751/yr  vs 15-day  +17.2%
+  Threshold, 7.5% loss                       washes   6.9/yr  lost   48.5 MWh  cost Rs   191,382/yr  vs 15-day  +40.8%
+  Solara cost-benefit (horizon 12 d)         washes   6.4/yr  lost   48.2 MWh  cost Rs   186,057/yr  vs 15-day  +42.5%
+  PPO reinforcement learning                 washes   5.8/yr  lost   50.3 MWh  cost Rs   185,511/yr  vs 15-day  +42.7%
+  Hindsight optimum (knows the future)       washes   5.6/yr  lost   46.7 MWh  cost Rs   174,641/yr  vs 15-day  +46.0%
+
+Pavagada Solar Park (Karnataka)
+  Rain only (never wash)                     washes   0.0/yr  lost  146.8 MWh  cost Rs   381,663/yr  vs 15-day  -23.7%
+  Fixed, every 15 days                       washes  24.2/yr  lost   30.3 MWh  cost Rs   308,512/yr  vs 15-day   +0.0%
+  Fixed, every 51 days                       washes   7.0/yr  lost   68.5 MWh  cost Rs   244,602/yr  vs 15-day  +20.7%
+  Threshold, 7.5% loss                       washes   5.0/yr  lost   47.7 MWh  cost Rs   171,062/yr  vs 15-day  +44.6%
+  Solara cost-benefit (horizon 13 d)         washes   6.1/yr  lost   41.9 MWh  cost Rs   166,681/yr  vs 15-day  +46.0%
+  PPO reinforcement learning                 washes   4.6/yr  lost   46.4 MWh  cost Rs   163,885/yr  vs 15-day  +46.9%
+  Hindsight optimum (knows the future)       washes   5.2/yr  lost   39.2 MWh  cost Rs   151,361/yr  vs 15-day  +50.9%
+
+Sensitivity to the cost of one wash:
+  wash costs Rs 4,750: Solara saves 21.8% vs 15-day schedule
+  wash costs Rs 9,500: Solara saves 37.9% vs 15-day schedule
+  wash costs Rs 19,000: Solara saves 54.7% vs 15-day schedule
+
+Average over the five parks (per MWp per year):
+  rain_only     cost Rs   437,012  washes   0.0  vs 15-day  -39.5%  above optimum  146.9%
+  fixed_common  cost Rs   313,350  washes  24.2  vs 15-day   +0.0%  above optimum   77.0%
+  fixed_tuned   cost Rs   253,317  washes   9.8  vs 15-day  +19.2%  above optimum   43.1%
+  threshold     cost Rs   198,184  washes   7.6  vs 15-day  +36.8%  above optimum   12.0%
+  solara        cost Rs   194,570  washes   6.9  vs 15-day  +37.9%  above optimum    9.9%
+  ppo           cost Rs   193,579  washes   5.6  vs 15-day  +38.3%  above optimum    9.4%
+  optimum       cost Rs   177,002  washes   6.6  vs 15-day  +43.5%  above optimum    0.0%
