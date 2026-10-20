@@ -70,7 +70,7 @@ def make_loaders(df=None):
     parts = {s: df[df["split"] == s] for s in ("train", "val", "test")}
 
     # Oversample rare severities so every class is seen evenly during training.
-    w = class_weights(parts["train"])[parts["train"]["severity"].values]
+    w = class_weights(parts["train"])[torch.as_tensor(parts["train"]["severity"].to_numpy(copy=True))]
     sampler = WeightedRandomSampler(w.double(), num_samples=len(w), replacement=True)
 
     kw = dict(batch_size=config.BATCH_SIZE, num_workers=config.NUM_WORKERS,

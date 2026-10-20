@@ -24,6 +24,13 @@ if (hasWebGL()) {
   document.body.classList.add("no-webgl");
 }
 
+// ---- bar turns solid once the hero has scrolled away ----------------------------
+const bar = document.querySelector(".bar");
+const results = document.getElementById("why");
+const updateBar = () => bar.classList.toggle("solid", scrollY > results.offsetTop - 80);
+addEventListener("scroll", updateBar, { passive: true });
+updateBar();
+
 // ---- tabs ---------------------------------------------------------------------
 const tabs = [...document.querySelectorAll('[role="tab"]')];
 function selectTab(tab) {
@@ -67,7 +74,7 @@ fetch("data/results.json")
     document.querySelector('[data-metric="macro_f1"]').textContent = m.macro_f1.toFixed(3);
     document.querySelector('[data-metric="test_images"]').textContent = m.test_images.toLocaleString("en-IN");
     document.getElementById("results-lede").textContent =
-      `Scores on ${m.test_days} days the network never saw during training. Guessing the most common class would score ${pct(m.majority_class_baseline_accuracy)}.`;
+      `Scores on ${m.test_images.toLocaleString("en-IN")} photographs the network never saw during training. Guessing the most common class would score ${pct(m.majority_class_baseline_accuracy)}.`;
 
     const names = d.class_names;
     const table = document.getElementById("confusion");
@@ -76,7 +83,8 @@ fetch("data/results.json")
       const total = row.reduce((a, b) => a + b, 0) || 1;
       return `<tr><th scope="row">${names[i]}</th>${row.map((v, j) => {
         const share = v / total;
-        return `<td style="--share:${share.toFixed(3)}"${i === j ? ' class="diag"' : ""}>${Math.round(share * 100)}%</td>`;
+        const cls = [i === j ? "diag" : "", share > 0.5 ? "hi" : ""].filter(Boolean).join(" ");
+        return `<td style="--share:${share.toFixed(3)}"${cls ? ` class="${cls}"` : ""}>${Math.round(share * 100)}%</td>`;
       }).join("")}</tr>`;
     }).join("");
     table.innerHTML = head + `<tbody>${body}</tbody>`;
@@ -111,5 +119,5 @@ function observeReveals(nodes) {
   });
 }
 observeReveals(document.querySelectorAll(
-  ".results h2, .results .section-lede, .figures > div, .matrix, .data-copy > *, .bins, .close-meta p",
+  ".why-wide, .why-copy > *, .why-side, .results h2, .results .section-lede, .figures > p, .matrix, .data-copy > *, .bins, .close-meta p",
 ));

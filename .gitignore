@@ -6,12 +6,13 @@ venv/
 .ipynb_checkpoints/
 
 # Dataset (CC BY-NC-SA, download it with prepare_data.py instead of committing it)
-data/
+/data/
 
 # Large model weights
 *.pt
 *.pth
 *.onnx
+!module1_detection/outputs/mobilenetv2_soiling.pt
 
 # Tooling
 .taste-skill/

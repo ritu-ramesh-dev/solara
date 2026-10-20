@@ -1,0 +1,23 @@
+Device: cuda
+C:\Users\RITU RAMESH\Documents\PROJECTS\COMPUTATIONAL MECHANICS\solara\module1_detection\data.py:73: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:209.)
+  w = class_weights(parts["train"])[parts["train"]["severity"].values]
+train:  31399 images, 15 days
+val  :   3489 images, 15 days
+test :   8722 images, 15 days
+[head  1/3] train loss 0.928 acc 0.649 f1 0.642 | val loss 1.116 acc 0.520 f1 0.408 (142s)  * saved
+[head  2/3] train loss 0.871 acc 0.682 f1 0.678 | val loss 1.109 acc 0.514 f1 0.421 (79s)  * saved
+[head  3/3] train loss 0.847 acc 0.698 f1 0.696 | val loss 1.109 acc 0.527 f1 0.424 (73s)  * saved
+[finetune  1/12] train loss 0.784 acc 0.732 f1 0.731 | val loss 0.833 acc 0.697 f1 0.570 (84s)  * saved
+[finetune  2/12] train loss 0.743 acc 0.747 f1 0.744 | val loss 0.742 acc 0.758 f1 0.666 (83s)  * saved
+[finetune  3/12] train loss 0.727 acc 0.753 f1 0.752 | val loss 0.710 acc 0.780 f1 0.704 (84s)  * saved
+[finetune  4/12] train loss 0.719 acc 0.758 f1 0.757 | val loss 0.713 acc 0.777 f1 0.704 (83s)
+[finetune  5/12] train loss 0.708 acc 0.759 f1 0.758 | val loss 0.717 acc 0.785 f1 0.715 (83s)  * saved
+[finetune  6/12] train loss 0.698 acc 0.766 f1 0.765 | val loss 0.716 acc 0.782 f1 0.713 (84s)
+[finetune  7/12] train loss 0.689 acc 0.767 f1 0.766 | val loss 0.707 acc 0.788 f1 0.717 (82s)  * saved
+[finetune  8/12] train loss 0.682 acc 0.771 f1 0.770 | val loss 0.703 acc 0.789 f1 0.719 (82s)  * saved
+[finetune  9/12] train loss 0.682 acc 0.771 f1 0.771 | val loss 0.705 acc 0.789 f1 0.720 (84s)  * saved
+[finetune 10/12] train loss 0.684 acc 0.769 f1 0.770 | val loss 0.688 acc 0.791 f1 0.721 (90s)  * saved
+[finetune 11/12] train loss 0.679 acc 0.771 f1 0.771 | val loss 0.703 acc 0.790 f1 0.722 (91s)  * saved
+[finetune 12/12] train loss 0.673 acc 0.774 f1 0.774 | val loss 0.704 acc 0.789 f1 0.720 (91s)
+Best val macro-F1: 0.7217. Checkpoint: C:\Users\RITU RAMESH\Documents\PROJECTS\COMPUTATIONAL MECHANICS\solara\module1_detection\outputs\mobilenetv2_soiling.pt
+EXIT 0

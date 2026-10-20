@@ -20,9 +20,16 @@ LOSS_BINS = [5.0, 15.0, 30.0]
 # Frames shot in very dim light have unreliable power-loss labels.
 MIN_IRRADIANCE = 0.05
 
-# Train / val / test split is by day, not by image, so near-identical frames
-# taken minutes apart never land on both sides of the split.
-SPLIT_FRACTIONS = (0.70, 0.15, 0.15)
+# How images are divided into train / val / test.
+#   "random": the usual stratified random split by image (default).
+#             TEST_FRACTION of all images go to test; VAL_FRACTION of the rest
+#             is held out for validation (choosing the best epoch).
+#   "day":    whole days go to one split, so near-identical frames taken
+#             minutes apart never sit on both sides (a stricter test).
+SPLIT_MODE = "random"
+TEST_FRACTION = 0.20
+VAL_FRACTION = 0.10
+DAY_SPLIT_FRACTIONS = (0.70, 0.15, 0.15)
 SEED = 42
 
 IMG_SIZE = 224

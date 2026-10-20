@@ -1,4 +1,4 @@
-"""Evaluate the trained classifier on the held-out test days.
+"""Evaluate the trained classifier on the held-out test set.
 
 Writes to module1_detection/outputs/:
   metrics.json             accuracy, macro precision/recall/F1, per-class report, baseline
@@ -95,6 +95,7 @@ def main():
 
     p, r, f1, _ = precision_recall_fscore_support(y, pred, average="macro", zero_division=0)
     labels = list(range(len(names)))
+    cm = confusion_matrix(y, pred, labels=labels)
     majority = parts["train"]["severity"].mode()[0]
     metrics = {
         "test_images": int(len(y)),
@@ -107,15 +108,22 @@ def main():
         "per_class": classification_report(y, pred, labels=labels, target_names=names,
                                            output_dict=True, zero_division=0),
         "loss_bins_pct": ckpt["loss_bins"],
+        "class_names": names,
+        "confusion_matrix": cm.tolist(),
     }
     config.OUT_DIR.mkdir(parents=True, exist_ok=True)
     (config.OUT_DIR / "metrics.json").write_text(json.dumps(metrics, indent=2))
+
+    test = parts["test"].reset_index(drop=True)
+    test[["path", "date", "power_loss_pct", "irradiance", "severity"]].assign(
+        predicted=pred, confidence=probs.max(1).round(4),
+    ).to_csv(config.OUT_DIR / "test_predictions.csv", index=False)
 
     print(classification_report(y, pred, labels=labels, target_names=names, zero_division=0))
     print(f"Accuracy {metrics['accuracy']:.4f} | macro-F1 {f1:.4f} | "
           f"majority baseline {metrics['majority_class_baseline_accuracy']:.4f}")
 
-    plot_confusion(confusion_matrix(y, pred, labels=labels), names, config.OUT_DIR / "confusion_matrix.png")
+    plot_confusion(cm, names, config.OUT_DIR / "confusion_matrix.png")
     plot_history(config.OUT_DIR / "training_curves.png")
     plot_samples(parts["test"].reset_index(drop=True), pred, names, config.OUT_DIR / "sample_predictions.png")
     print(f"Saved figures to {config.OUT_DIR}")

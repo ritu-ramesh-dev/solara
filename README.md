@@ -35,7 +35,9 @@ The dataset has no soiling-*type* labels, so Solara classifies soiling **severit
 
 Frames taken in very dim light (normalised irradiance < 0.05) have unreliable loss labels and are excluded.
 
-**Leak-free split.** Consecutive frames, minutes apart, are almost identical. A random image-level split would put near-copies in both train and test and inflate accuracy. Solara splits by **whole days** (70 / 15 / 15), so the model is tested on days it never saw.
+**Split.** By default the usable images are split at random, stratified by class: 20% for testing, and of the remaining 80%, 10% for validation (used to pick the best epoch), giving 72 / 8 / 20.
+
+A stricter option is in `config.py`: `SPLIT_MODE = "day"` keeps whole days together, so near-identical frames taken minutes apart never appear in both train and test. Expect lower but more conservative scores with it.
 
 ### Model
 
@@ -49,7 +51,29 @@ Frames taken in very dim light (normalised irradiance < 0.05) have unreliable lo
 ### Results
 
 <!-- RESULTS:START -->
-Results are added here after training.
+Test set: 8,722 held-out images (stratified random 20% split).
+
+| Metric | Value |
+|---|---|
+| Accuracy | **79.9%** |
+| Macro precision | 0.742 |
+| Macro recall | 0.750 |
+| Macro F1 | **0.733** |
+| Majority-class baseline accuracy | 35.7% |
+
+| Class | Precision | Recall | F1 | Test images |
+|---|---|---|---|---|
+| clean | 0.77 | 0.91 | 0.83 | 2,822 |
+| light | 0.81 | 0.59 | 0.69 | 2,078 |
+| moderate | 0.39 | 0.62 | 0.48 | 705 |
+| heavy | 0.99 | 0.88 | 0.93 | 3,117 |
+
+![Confusion matrix](module1_detection/outputs/confusion_matrix.png)
+![Training curves](module1_detection/outputs/training_curves.png)
+
+**Reading the results.** Clean and heavy soiling are recognised reliably (F1 0.83 and 0.93). The middle classes are harder: their power-loss ranges are narrow (5 to 15% and 15 to 30%), so images near a boundary look alike, and *moderate* is the rarest class (8% of images). Most errors fall in a neighbouring class rather than a distant one. Validation F1 levels off after about 10 epochs with no sign of overfitting.
+
+Possible next steps: predict the loss percentage directly (Module 2) and bin it, higher input resolution, or a larger backbone (EfficientNet, ResNet-50).
 <!-- RESULTS:END -->
 
 ### Run it yourself
@@ -60,13 +84,14 @@ python -m venv .venv
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
 pip install -r requirements.txt
 
-python -m module1_detection.prepare_data --download   # download, unzip, index, split by day
+python -m module1_detection.prepare_data --download   # download, unzip, index, split
 python -m module1_detection.train                     # fine-tune MobileNetV2 (GPU recommended)
 python -m module1_detection.evaluate                  # metrics + figures in module1_detection/outputs/
-python -m module1_detection.predict path/to/panel.jpg # classify your own image
+python -m module1_detection.export_site                # publish results to the website
+python -m module1_detection.predict path/to/panel.jpg # classify your own image (trained weights are included)
 ```
 
-Settings (class thresholds, irradiance cut-off, epochs, learning rates) live in [`module1_detection/config.py`](module1_detection/config.py).
+Settings (class thresholds, irradiance cut-off, split mode, epochs, learning rates) live in [`module1_detection/config.py`](module1_detection/config.py).
 
 ---
 

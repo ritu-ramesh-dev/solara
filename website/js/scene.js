@@ -143,7 +143,7 @@ export function startScene(canvas, { onReady } = {}) {
     const aspect = innerWidth / innerHeight;
     camera.aspect = aspect;
     // Pull back on narrow screens so the whole panel stays in frame.
-    camDist = aspect < 0.8 ? 9.5 : aspect < 1.2 ? 7 : aspect < 1.5 ? 6.2 : 6.4;
+    camDist = aspect < 0.8 ? 8.2 : aspect < 1.2 ? 7 : aspect < 1.5 ? 6.2 : 6.4;
     camera.updateProjectionMatrix();
   }
   layoutCamera();
@@ -171,7 +171,7 @@ export function startScene(canvas, { onReady } = {}) {
     camera.position.set(0, THREE.MathUtils.lerp(1.25, 0.8, s), camDist * THREE.MathUtils.lerp(1, 0.8, s));
     camera.lookAt(lookAt);
     // Shift the picture up so the panel sits above the title (like the statue).
-    const lift = (wide ? 0.2 : 0.24) * (1 - s) + (wide ? 0 : 0.18) * s;
+    const lift = (wide ? 0.2 : 0.13) * (1 - s) + (wide ? 0 : 0.2) * s;
     camera.setViewOffset(innerWidth, innerHeight, 0, innerHeight * lift, innerWidth, innerHeight);
     canvas.style.opacity = String(THREE.MathUtils.clamp(1.9 - scrollP, 0.22, 1));
 
@@ -183,15 +183,16 @@ export function startScene(canvas, { onReady } = {}) {
 
     const idle = !finePointer || performance.now() - lastMove > 5000;
     if (idle) {
-      // The sun drifts in a slow arc when no one is steering it.
-      const k = reduceMotion ? 0 : t * 0.22;
-      ndc.set(Math.sin(k) * 0.42 + (wide ? s * 0.35 : 0), 0.18 + Math.sin(k * 1.7) * 0.12 + Math.cos(k * 0.6) * 0.06);
-    }
-    raycaster.setFromCamera(ndc, camera);
-    if (raycaster.ray.intersectPlane(lightPlane, target)) {
-      target.clampLength(0, 6);
-      const k = reduceMotion ? 1 : 1 - Math.exp(-dt * (idle ? 2.5 : 7));
-      current.lerp(target, k);
+      // The sun drifts in a slow arc across the hero panel when no one steers it.
+      const k = reduceMotion ? 0.6 : t * 0.22;
+      target.set(Math.sin(k) * 0.75, 0.12 + Math.sin(k * 1.7) * 0.28, 0.38).applyMatrix4(hero.matrixWorld);
+      current.lerp(target, reduceMotion ? 1 : 1 - Math.exp(-dt * 2.5));
+    } else {
+      raycaster.setFromCamera(ndc, camera);
+      if (raycaster.ray.intersectPlane(lightPlane, target)) {
+        target.clampLength(0, 6);
+        current.lerp(target, reduceMotion ? 1 : 1 - Math.exp(-dt * 7));
+      }
     }
     sun.position.copy(current);
     // A breath of flicker keeps the light feeling alive.

@@ -19,12 +19,12 @@
 </head>
 <body>
   <canvas id="stage" aria-hidden="true"></canvas>
-  <img class="stage-fallback" src="assets/hero-poster.jpg" alt="" aria-hidden="true">
 
   <header class="bar">
     <a class="wordmark" href="#top">Solara</a>
     <nav aria-label="Sections">
       <a href="#modules">Modules</a>
+      <a href="#why">Why</a>
       <a href="#results">Results</a>
       <a href="#data">Data</a>
     </nav>
@@ -62,7 +62,7 @@
               <label><input type="radio" name="soil" value="2"><span>Moderate</span></label>
               <label><input type="radio" name="soil" value="3"><span>Heavy</span></label>
             </div>
-            <p class="soil-readout" aria-live="polite"><strong id="soil-loss">under 5%</strong> of the panel's power lost</p>
+            <p class="soil-readout" aria-live="polite">Power lost to this much dust: <strong id="soil-loss">under 5%</strong></p>
           </fieldset>
         </div>
 
@@ -78,18 +78,36 @@
       </div>
     </section>
 
+    <section class="why" id="why" aria-labelledby="why-title">
+      <figure class="why-wide">
+        <img src="assets/bhadla-solar-park.jpg" alt="Long rows of solar panels on sandy ground at Bhadla Solar Park, Rajasthan, seen from a drone" width="1920" height="1080" loading="lazy">
+        <figcaption>Bhadla Solar Park in the Thar desert, Rajasthan.</figcaption>
+      </figure>
+      <div class="why-body">
+        <div class="why-copy">
+          <h2 id="why-title">Dust is a desert problem</h2>
+          <p>India's biggest solar parks sit where the sun is strongest, and that is where the dust is too. Reported losses from soiling range from a few percent to more than 40% of a panel's output.</p>
+          <p>Cleaning on a fixed calendar wastes water and labour on glass that is still clean, then lets losses build up between visits. Solara cleans when the panel itself says so.</p>
+        </div>
+        <figure class="why-side">
+          <img src="assets/cleaning-panels.jpg" alt="A worker in a hard hat cleaning a row of solar panels with a long-handled mop" width="1920" height="1280" loading="lazy">
+          <figcaption>Every cleaning costs water, labour and time.</figcaption>
+        </figure>
+      </div>
+    </section>
+
     <section class="results" id="results" aria-labelledby="results-title">
       <h2 id="results-title">How well it sees dust</h2>
-      <p class="section-lede" id="results-lede">Scores on days the network never saw during training.</p>
-      <dl class="figures" id="figures">
-        <div><dt>Accuracy</dt><dd data-metric="accuracy">–</dd></div>
-        <div><dt>Macro F1</dt><dd data-metric="macro_f1">–</dd></div>
-        <div><dt>Test images</dt><dd data-metric="test_images">–</dd></div>
-      </dl>
+      <p class="section-lede" id="results-lede">Scores on photographs the network never saw during training.</p>
+      <div class="figures" id="figures">
+        <p><span class="fig-num" data-metric="accuracy">–</span> <span class="fig-label">accuracy on held-out photographs</span></p>
+        <p><span class="fig-num" data-metric="macro_f1">–</span> <span class="fig-label">macro F1 across the four classes</span></p>
+        <p><span class="fig-num" data-metric="test_images">–</span> <span class="fig-label">test photographs</span></p>
+      </div>
       <div class="results-body">
         <figure class="matrix">
           <table id="confusion" aria-describedby="confusion-caption"></table>
-          <figcaption id="confusion-caption">Confusion matrix on the test days. Rows are the true class, columns the prediction; each cell shows the share of that row.</figcaption>
+          <figcaption id="confusion-caption">Confusion matrix on the test photographs. Rows are the true class, columns the prediction; each cell shows the share of that row.</figcaption>
         </figure>
         <div class="samples" id="samples"></div>
       </div>
@@ -100,7 +118,7 @@
         <h2 id="data-title">Trained on DeepSolarEye</h2>
         <p>One panel, photographed every few minutes for weeks while dust settled and was cleaned away. Every photograph carries the power the panel lost at that moment, measured against a clean reference panel beside it.</p>
         <p>Solara turns that measured loss into four classes. Photographs taken in dim light, where the loss reading is unreliable, are left out.</p>
-        <p>Whole days are kept apart for testing, so the network is judged on days it has never seen rather than on near-copies of frames it trained on.</p>
+        <p>The photographs are shuffled and split by class: one in five is kept back for testing, and the network is scored only on those.</p>
       </div>
       <table class="bins">
         <caption>From measured power loss to class</caption>
@@ -119,7 +137,7 @@
     <p class="close-name" aria-hidden="true">Solara</p>
     <div class="close-meta">
       <p>Ritu Ramesh, with Dr. Gargi. B.Tech Artificial Intelligence and Data Science, Amrita Vishwa Vidyapeetham.</p>
-      <p>Images and power-loss labels: DeepSolarEye dataset, Mehta et al., WACV 2018, used under CC BY-NC-SA. Panel rendered in three.js.</p>
+      <p>Images and power-loss labels: DeepSolarEye dataset, Mehta et al., WACV 2018, used under CC BY-NC-SA. Photographs via Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:AMP_Energy_Bhadla_Solar_Power_Plant_-_53700156579.jpg">"AMP Energy Bhadla Solar Power Plant"</a> by Sarvajanik Puralekh, CC BY-SA 2.0; <a href="https://commons.wikimedia.org/wiki/File:Cleaning_solar_panel.jpg">"Cleaning solar panel"</a> by Deo photographer, CC BY-SA 4.0. Panel rendered in three.js.</p>
     </div>
   </footer>
 
