@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detect: Solara</title>
+  <meta name="description" content="Module 1 of Solara: a MobileNetV2 network that classifies soiling on solar panels from photographs.">
+  <meta name="theme-color" content="#050505">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+  <header class="bar">
+    <a class="wordmark" href="./">Solara</a>
+    <nav aria-label="Pages">
+      <a href="detect.html" aria-current="page">Detect</a>
+      <a href="predict.html">Predict</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="about.html">About</a>
+    </nav>
+    <a class="bar-action" href="https://github.com/ritu-ramesh-dev/solara">Code on GitHub</a>
+  </header>
+
+  <main>
+    <header class="page-head">
+      <div>
+        <h1>Detect</h1>
+        <p class="section-lede" id="results-lede">Module 1. A MobileNetV2 network, fine-tuned on photographs of a real panel, reads each image and names how dirty the glass is: clean, light, moderate or heavy soiling.</p>
+        <a class="button page-action" href="https://github.com/ritu-ramesh-dev/solara/tree/main/module1_detection">See the code</a>
+      </div>
+      <p class="page-fig"><span class="fig-num" data-metric="accuracy">–</span> <span class="fig-label">accuracy on photographs the network never saw</span></p>
+    </header>
+
+    <section class="results" id="results" aria-labelledby="results-title">
+      <h2 id="results-title">How well it sees dust</h2>
+      <div class="figures" id="figures">
+        <p><span class="fig-num" data-metric="macro_f1">–</span> <span class="fig-label">macro F1 across the four classes</span></p>
+        <p><span class="fig-num" data-metric="baseline">–</span> <span class="fig-label">accuracy from always guessing the most common class</span></p>
+        <p><span class="fig-num" data-metric="test_images">–</span> <span class="fig-label">test photographs</span></p>
+      </div>
+      <div class="results-body">
+        <figure class="matrix">
+          <table id="confusion" aria-describedby="confusion-caption"></table>
+          <figcaption id="confusion-caption">Confusion matrix on the test photographs. Rows are the true class, columns the prediction; each cell shows the share of that row.</figcaption>
+        </figure>
+        <div class="samples" id="samples"></div>
+      </div>
+    </section>
+
+    <section class="data" id="data" aria-labelledby="data-title">
+      <div class="data-copy">
+        <h2 id="data-title">Trained on DeepSolarEye</h2>
+        <p>One panel, photographed every few minutes for weeks while dust settled and was cleaned away. Every photograph carries the power the panel lost at that moment, measured against a clean reference panel beside it.</p>
+        <p>Solara turns that measured loss into four classes. Photographs taken in dim light, where the loss reading is unreliable, are left out.</p>
+        <p>The photographs are shuffled and split by class: one in five is kept back for testing, and the network is scored only on those.</p>
+      </div>
+      <table class="bins">
+        <caption>From measured power loss to class</caption>
+        <thead><tr><th scope="col">Class</th><th scope="col">Power lost</th><th scope="col">Images</th></tr></thead>
+        <tbody>
+          <tr><td>Clean</td><td>under 5%</td><td data-count="clean">–</td></tr>
+          <tr><td>Light</td><td>5 to 15%</td><td data-count="light">–</td></tr>
+          <tr><td>Moderate</td><td>15 to 30%</td><td data-count="moderate">–</td></tr>
+          <tr><td>Heavy</td><td>over 30%</td><td data-count="heavy">–</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <nav class="pager" aria-label="Chapters">
+      <a href="./" class="pager-prev" data-label="Back to">Home</a>
+      <a href="predict.html" class="pager-next" data-label="Next">Predict</a>
+    </nav>
+  </main>
+
+  <footer class="close">
+    <p class="close-name" aria-hidden="true">Solara</p>
+    <div class="close-meta">
+      <p>Ritu Ramesh, with Dr. Gargi. B.Tech Artificial Intelligence and Data Science, Amrita Vishwa Vidyapeetham.</p>
+      <p>Images and power-loss labels: DeepSolarEye dataset, Mehta et al., WACV 2018, used under CC BY-NC-SA. All credits on the <a href="about.html#credits">About page</a>.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/detect.js"></script>
+</body>
+</html>

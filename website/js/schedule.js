@@ -1,6 +1,7 @@
-// Module 3: cleaning schedule at five Indian solar parks.
+// Schedule page: Module 3 at five Indian solar parks.
+import { inr, loadJSON, observeReveals } from "./site.js";
+
 const SVG_NS = "http://www.w3.org/2000/svg";
-const inr = (v) => `₹${Math.round(v).toLocaleString("en-IN")}`;
 const fmtDate = (s) => new Date(`${s}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -49,8 +50,7 @@ function render(d) {
   const [y0, y1] = d.assumptions.test_years;
   document.getElementById("schedule-lede").textContent =
     `Module 3 decides each morning whether washing the panels is worth it, from Module 2's reading of the dust, the expected sunshine and a three-day rain forecast. On ${y0} to ${y1} weather at five Indian solar parks it costs on average ${Math.round(sol.saving_vs_fixed_pct)}% less than washing every 15 days, with ${Math.round(fix.cleanings - sol.cleanings)} fewer washes a year.`;
-  document.getElementById("schedule-status").innerHTML =
-    `On average ${Math.round(sol.saving_vs_fixed_pct)}% cheaper than washing every 15 days at five Indian parks. <a href="#schedule">See the parks</a>.`;
+  document.getElementById("schedule-saving").textContent = `${Math.round(sol.saving_vs_fixed_pct)}%`;
 
   function show(key) {
     const s = d.sites[key], p = s.policies, so = p.solara, fx = p.fixed_common;
@@ -100,19 +100,9 @@ function render(d) {
   show(keys[0]);
 }
 
-fetch("data/schedule.json")
-  .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-  .then(render)
+loadJSON("data/schedule.json")
+  .then((d) => {
+    render(d);
+    observeReveals(document.querySelectorAll(".park-picker, .timeline, .park-facts, .policies"));
+  })
   .catch(() => { /* results not published yet */ });
-
-// Entrances, matching the rest of the page.
-if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  const io = new IntersectionObserver((entries) => {
-    for (const e of entries) if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-  }, { threshold: 0.15 });
-  document.querySelectorAll(".schedule-head > *, .park-picker, .timeline, .park-facts, .policies").forEach((n, i) => {
-    n.classList.add("reveal");
-    n.style.setProperty("--d", `${(i % 6) * 75}ms`);
-    io.observe(n);
-  });
-}

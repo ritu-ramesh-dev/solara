@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Predict: Solara</title>
+  <meta name="description" content="Module 2 of Solara: predicting the share of a solar panel's power lost to dust from a photograph, irradiance and time of day.">
+  <meta name="theme-color" content="#050505">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+  <header class="bar">
+    <a class="wordmark" href="./">Solara</a>
+    <nav aria-label="Pages">
+      <a href="detect.html">Detect</a>
+      <a href="predict.html" aria-current="page">Predict</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="about.html">About</a>
+    </nav>
+    <a class="bar-action" href="https://github.com/ritu-ramesh-dev/solara">Code on GitHub</a>
+  </header>
+
+  <main>
+    <header class="page-head">
+      <div>
+        <h1>Predict</h1>
+        <p class="section-lede" id="power-lede">Module 2 puts a number on the dust: the share of the panel's power that is lost, predicted from the photograph, the irradiance and the time of day.</p>
+        <a class="button page-action" href="https://github.com/ritu-ramesh-dev/solara/tree/main/module2_powerloss">See the code</a>
+      </div>
+      <p class="page-fig"><span class="fig-num" data-power="mae">–</span> <span class="fig-label">percentage points: the average error on test photographs</span></p>
+    </header>
+
+    <section class="power" id="power" aria-labelledby="power-title">
+      <div class="power-copy">
+        <h2 id="power-title">How much power it costs</h2>
+        <div class="power-figures">
+          <p><span class="fig-num" data-power="r2">–</span> <span class="fig-label">R², share of the variation in loss explained</span></p>
+          <p><span class="fig-num" data-power="env">–</span> <span class="fig-label">average error without the photograph, from weather alone</span></p>
+        </div>
+        <table class="models">
+          <caption>Every model, on the same test photographs</caption>
+          <thead><tr><th scope="col">Model</th><th scope="col">MAE</th><th scope="col">RMSE</th><th scope="col">R²</th></tr></thead>
+          <tbody id="models-body"><tr><td colspan="4">Loading results.</td></tr></tbody>
+        </table>
+        <p class="note" id="binned-note"></p>
+      </div>
+      <figure class="scatter">
+        <svg id="scatter" viewBox="0 0 440 440" role="img" aria-labelledby="scatter-caption"></svg>
+        <figcaption id="scatter-caption">Predicted against measured power loss for test photographs. Points on the diagonal are exact.</figcaption>
+      </figure>
+    </section>
+
+    <section class="photo-strip" aria-labelledby="strip-title">
+      <h2 id="strip-title">Six photographs, six readings</h2>
+      <p class="section-lede">Test photographs the model never trained on, from nearly clean to heavily soiled, with the power loss the panel really suffered and the loss the model read from the picture.</p>
+      <div class="strip" id="strip"></div>
+    </section>
+
+    <nav class="pager" aria-label="Chapters">
+      <a href="detect.html" class="pager-prev" data-label="Previous">Detect</a>
+      <a href="schedule.html" class="pager-next" data-label="Next">Schedule</a>
+    </nav>
+  </main>
+
+  <footer class="close">
+    <p class="close-name" aria-hidden="true">Solara</p>
+    <div class="close-meta">
+      <p>Ritu Ramesh, with Dr. Gargi. B.Tech Artificial Intelligence and Data Science, Amrita Vishwa Vidyapeetham.</p>
+      <p>Power-loss labels and irradiance: DeepSolarEye dataset, Mehta et al., WACV 2018. All credits on the <a href="about.html#credits">About page</a>.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/predict.js"></script>
+</body>
+</html>

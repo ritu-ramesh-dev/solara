@@ -12,6 +12,26 @@ SITE = config.ROOT / "website"
 SCATTER_POINTS = 1200
 
 
+def export_samples(preds, best, targets=(2, 8, 16, 28, 48, 75)):
+    """Six test photographs spread over the loss range, with the best model's
+    prediction, copied into website/assets/predict/."""
+    import shutil
+
+    out_dir = SITE / "assets" / "predict"
+    if out_dir.exists():
+        shutil.rmtree(out_dir)
+    out_dir.mkdir(parents=True)
+    bright = preds[preds["irradiance"] > 0.3]
+    rows = []
+    for i, t in enumerate(targets):
+        r = bright.iloc[(bright["power_loss_pct"] - t).abs().argsort().iloc[0]]
+        dst = out_dir / f"photo_{i}.jpg"
+        shutil.copy(config.ROOT / r["path"], dst)
+        rows.append({"src": f"assets/predict/{dst.name}", "measured": round(float(r["power_loss_pct"]), 1),
+                     "predicted": round(float(r[best]), 1)})
+    return rows
+
+
 def main():
     m = json.loads((config.OUT_DIR / "metrics.json").read_text())
     preds = pd.read_csv(config.OUT_DIR / "test_predictions.csv")
@@ -27,6 +47,7 @@ def main():
             for key, r in m["models"].items()
         ],
         "scatter": [[round(a, 1), round(b, 1)] for a, b in zip(pts["power_loss_pct"], pts[best])],
+        "samples": export_samples(preds, best),
     }
     (SITE / "data").mkdir(exist_ok=True)
     (SITE / "data" / "powerloss.json").write_text(json.dumps(data))

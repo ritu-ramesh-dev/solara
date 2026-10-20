@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Solara: Solar Soiling AI</title>
-  <meta name="description" content="Solara detects dust on solar panels with a CNN, predicts the power it costs and schedules cleaning only when it pays.">
+  <meta name="description" content="Solara detects dust on solar panels, predicts the power it costs and schedules cleaning only when it pays, tested at five Indian solar parks.">
   <meta name="theme-color" content="#050505">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <script type="importmap">
     { "imports": {
@@ -17,18 +17,16 @@
     } }
   </script>
 </head>
-<body>
-  <canvas id="stage" aria-hidden="true"></canvas>
+<body class="home">
+  <canvas id="stage" aria-label="A 3D solar panel. Drag to turn it."></canvas>
 
   <header class="bar">
-    <a class="wordmark" href="#top">Solara</a>
-    <nav aria-label="Sections">
-      <a href="#modules">Modules</a>
-      <a href="#why">Why</a>
-      <a href="#results">Detection</a>
-      <a href="#power">Power loss</a>
-      <a href="#schedule">Schedule</a>
-      <a href="#data">Data</a>
+    <a class="wordmark" href="./" aria-current="page">Solara</a>
+    <nav aria-label="Pages">
+      <a href="detect.html">Detect</a>
+      <a href="predict.html">Predict</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="about.html">About</a>
     </nav>
     <a class="bar-action" href="https://github.com/ritu-ramesh-dev/solara">Code on GitHub</a>
   </header>
@@ -39,147 +37,64 @@
         <h1 class="title">Solara</h1>
         <p class="lede">AI that finds dust on solar panels, measures the power it costs, and says when cleaning is worth it.</p>
         <div class="hero-actions">
-          <a class="button" href="#modules">See how it works</a>
-          <p class="hint">Move your cursor: you are the sun.</p>
+          <a class="button" href="#chapters">Explore the project</a>
+          <p class="hint">Drag to turn the panel. Move the cursor to steer the sun.</p>
         </div>
       </div>
-    </section>
-
-    <section class="modules" id="modules" aria-labelledby="modules-title">
-      <div class="modules-copy">
-        <h2 id="modules-title" class="visually-hidden">The three modules</h2>
-        <div class="tabs" role="tablist" aria-label="Modules">
-          <button role="tab" id="tab-detect" aria-controls="pane-detect" aria-selected="true">Detect</button>
-          <button role="tab" id="tab-predict" aria-controls="pane-predict" aria-selected="false" tabindex="-1">Predict</button>
-          <button role="tab" id="tab-schedule" aria-controls="pane-schedule" aria-selected="false" tabindex="-1">Schedule</button>
-        </div>
-
-        <div role="tabpanel" id="pane-detect" aria-labelledby="tab-detect" class="pane">
-          <p>A MobileNetV2 network, fine-tuned on 45,754 photographs of a real panel, reads each image and names how dirty the glass is: clean, light, moderate or heavy soiling.</p>
-          <fieldset class="soil-picker">
-            <legend>Dust the panel</legend>
-            <div class="soil-options">
-              <label><input type="radio" name="soil" value="0" checked><span>Clean</span></label>
-              <label><input type="radio" name="soil" value="1"><span>Light</span></label>
-              <label><input type="radio" name="soil" value="2"><span>Moderate</span></label>
-              <label><input type="radio" name="soil" value="3"><span>Heavy</span></label>
-            </div>
-            <p class="soil-readout" aria-live="polite">Power lost to this much dust: <strong id="soil-loss">under 5%</strong></p>
-          </fieldset>
-        </div>
-
-        <div role="tabpanel" id="pane-predict" aria-labelledby="tab-predict" class="pane" hidden>
-          <p>The same network then puts a number on it: the percentage of power the dust is taking, learned from the panel's measured output together with the irradiance and the time of day.</p>
-          <p class="status" id="predict-status">Module 2 compares a CNN regressor with Random Forest and XGBoost models. <a href="#power">See the results</a>.</p>
-        </div>
-
-        <div role="tabpanel" id="pane-schedule" aria-labelledby="tab-schedule" class="pane" hidden>
-          <p>Then Solara weighs the energy a wash would win back against the water and labour it costs, waits when the forecast shows rain that will wash the panels for free, and books the wash only when it pays.</p>
-          <p class="status" id="schedule-status">Tested at five Indian solar parks against fixed-interval washing. <a href="#schedule">See the parks</a>.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="why" id="why" aria-labelledby="why-title">
-      <figure class="why-wide">
-        <img src="assets/bhadla-solar-park.jpg" alt="Long rows of solar panels on sandy ground at Bhadla Solar Park, Rajasthan, seen from a drone" width="1920" height="1080" loading="lazy">
-        <figcaption>Bhadla Solar Park in the Thar desert, Rajasthan.</figcaption>
-      </figure>
-      <div class="why-body">
-        <div class="why-copy">
-          <h2 id="why-title">Dust is a desert problem</h2>
-          <p>India's biggest solar parks sit where the sun is strongest, and that is where the dust is too. Reported losses from soiling range from a few percent to more than 40% of a panel's output.</p>
-          <p>Cleaning on a fixed calendar wastes water and labour on glass that is still clean, then lets losses build up between visits. Solara cleans when the panel itself says so.</p>
-        </div>
-        <figure class="why-side">
-          <img src="assets/cleaning-panels.jpg" alt="A worker in a hard hat cleaning a row of solar panels with a long-handled mop" width="1920" height="1280" loading="lazy">
-          <figcaption>Every cleaning costs water, labour and time.</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section class="results" id="results" aria-labelledby="results-title">
-      <h2 id="results-title">How well it sees dust</h2>
-      <p class="section-lede" id="results-lede">Scores on photographs the network never saw during training.</p>
-      <div class="figures" id="figures">
-        <p><span class="fig-num" data-metric="accuracy">–</span> <span class="fig-label">accuracy on held-out photographs</span></p>
-        <p><span class="fig-num" data-metric="macro_f1">–</span> <span class="fig-label">macro F1 across the four classes</span></p>
-        <p><span class="fig-num" data-metric="test_images">–</span> <span class="fig-label">test photographs</span></p>
-      </div>
-      <div class="results-body">
-        <figure class="matrix">
-          <table id="confusion" aria-describedby="confusion-caption"></table>
-          <figcaption id="confusion-caption">Confusion matrix on the test photographs. Rows are the true class, columns the prediction; each cell shows the share of that row.</figcaption>
-        </figure>
-        <div class="samples" id="samples"></div>
-      </div>
-    </section>
-
-    <section class="power" id="power" aria-labelledby="power-title">
-      <div class="power-copy">
-        <h2 id="power-title">How much power it costs</h2>
-        <p class="section-lede" id="power-lede">Module 2 puts a number on the dust: the share of the panel's power that is lost, predicted from the photograph, the irradiance and the time of day.</p>
-        <div class="power-figures">
-          <p><span class="fig-num" data-power="mae">–</span> <span class="fig-label">average error, in percentage points of power</span></p>
-          <p><span class="fig-num" data-power="r2">–</span> <span class="fig-label">R², share of the variation in loss explained</span></p>
-        </div>
-        <table class="models">
-          <caption>Every model, on the same test photographs</caption>
-          <thead><tr><th scope="col">Model</th><th scope="col">MAE</th><th scope="col">RMSE</th><th scope="col">R²</th></tr></thead>
-          <tbody id="models-body"><tr><td colspan="4">Results are on their way.</td></tr></tbody>
-        </table>
-      </div>
-      <figure class="scatter">
-        <svg id="scatter" viewBox="0 0 440 440" role="img" aria-labelledby="scatter-caption"></svg>
-        <figcaption id="scatter-caption">Predicted against measured power loss for test photographs. Points on the diagonal are exact.</figcaption>
-      </figure>
-    </section>
-
-    <section class="schedule" id="schedule" aria-labelledby="schedule-title">
-      <div class="schedule-head">
-        <h2 id="schedule-title">When to wash, park by park</h2>
-        <p class="section-lede" id="schedule-lede">Module 3 decides each morning whether washing the panels is worth it, using Module 2's reading of the dust, the expected sunshine and a three-day rain forecast. Simulated on twenty years of real weather at five Indian solar parks.</p>
-      </div>
-      <div class="park-picker" role="radiogroup" aria-label="Solar park" id="park-picker"></div>
-      <div class="schedule-body">
-        <figure class="timeline">
-          <svg id="timeline" viewBox="0 0 760 320" role="img" aria-labelledby="timeline-caption"></svg>
-          <figcaption id="timeline-caption">Soiling loss through one year. Ticks under the chart mark washes; blue bars are rain.</figcaption>
-        </figure>
-        <div class="park-facts">
-          <p class="park-name" id="park-name">–</p>
-          <div class="park-figures">
-            <p><span class="fig-num" id="park-saving">–</span> <span class="fig-label">saved per MW each year compared with washing every 15 days</span></p>
-            <p><span class="fig-num" id="park-washes">–</span> <span class="fig-label" id="park-washes-label">washes a year</span></p>
-            <p><span class="fig-num" id="park-water">–</span> <span class="fig-label">litres of water saved per MW each year</span></p>
+      <div class="hud">
+        <fieldset class="soil-picker">
+          <legend>Dust on the glass</legend>
+          <div class="soil-options">
+            <label><input type="radio" name="soil" value="bhadla" checked><span>Bhadla now</span></label>
+            <label><input type="radio" name="soil" value="0"><span>Clean</span></label>
+            <label><input type="radio" name="soil" value="10"><span>Light</span></label>
+            <label><input type="radio" name="soil" value="22"><span>Moderate</span></label>
+            <label><input type="radio" name="soil" value="40"><span>Heavy</span></label>
           </div>
-          <p class="park-next" id="park-next"></p>
-        </div>
+          <p class="soil-readout" id="soil-readout" aria-live="polite">Dust level from Module 3's simulation of Bhadla Solar Park.</p>
+        </fieldset>
       </div>
-      <table class="models policies">
-        <caption id="policies-caption">Every policy at this park, test years 2020 to 2024</caption>
-        <thead><tr><th scope="col">Policy</th><th scope="col">Washes a year</th><th scope="col">Energy lost (MWh)</th><th scope="col">Cost a year (₹)</th><th scope="col">vs 15-day</th></tr></thead>
-        <tbody id="policies-body"><tr><td colspan="5">Results are on their way.</td></tr></tbody>
-      </table>
     </section>
 
-    <section class="data" id="data" aria-labelledby="data-title">
-      <div class="data-copy">
-        <h2 id="data-title">Trained on DeepSolarEye</h2>
-        <p>One panel, photographed every few minutes for weeks while dust settled and was cleaned away. Every photograph carries the power the panel lost at that moment, measured against a clean reference panel beside it.</p>
-        <p>Solara turns that measured loss into four classes. Photographs taken in dim light, where the loss reading is unreliable, are left out.</p>
-        <p>The photographs are shuffled and split by class: one in five is kept back for testing, and the network is scored only on those.</p>
+    <section class="chapters" id="chapters" aria-labelledby="chapters-title">
+      <div class="chapters-head">
+        <h2 id="chapters-title">Three models, one decision</h2>
+        <p class="section-lede">A camera photographs the panels. Solara sees the dust, works out the power it is costing, and books a wash only when the energy won back is worth more than the water and labour.</p>
       </div>
-      <table class="bins">
-        <caption>From measured power loss to class</caption>
-        <thead><tr><th scope="col">Class</th><th scope="col">Power lost</th><th scope="col">Images</th></tr></thead>
-        <tbody id="bins-body">
-          <tr><td>Clean</td><td>under 5%</td><td data-count="clean">–</td></tr>
-          <tr><td>Light</td><td>5 to 15%</td><td data-count="light">–</td></tr>
-          <tr><td>Moderate</td><td>15 to 30%</td><td data-count="moderate">–</td></tr>
-          <tr><td>Heavy</td><td>over 30%</td><td data-count="heavy">–</td></tr>
-        </tbody>
-      </table>
+      <ul class="chapter-list">
+        <li>
+          <a href="detect.html">
+            <img class="chapter-img" src="assets/samples/sample_6.jpg" alt="A DeepSolarEye photograph of a dusty test panel" loading="lazy" width="320" height="240">
+            <span class="chapter-name">Detect</span>
+            <span class="chapter-text">A MobileNetV2 network reads each photograph and names how dirty the glass is.</span>
+            <span class="chapter-fig"><strong data-home="accuracy">79.9%</strong> accuracy</span>
+          </a>
+        </li>
+        <li>
+          <a href="predict.html">
+            <img class="chapter-img" src="assets/predict/photo_3.jpg" alt="A test panel photograph that lost 28% of its power to dust" loading="lazy" width="320" height="240">
+            <span class="chapter-name">Predict</span>
+            <span class="chapter-text">The photograph, sunlight and time of day become the exact share of power lost.</span>
+            <span class="chapter-fig"><strong data-home="mae">3.8</strong> points average error</span>
+          </a>
+        </li>
+        <li>
+          <a href="schedule.html">
+            <img class="chapter-img" src="assets/karnataka-solar-plant.jpg" alt="Rows of solar panels at a solar plant in Karnataka, seen from the air" loading="lazy" width="320" height="240">
+            <span class="chapter-name">Schedule</span>
+            <span class="chapter-text">Each morning, wash or wait, tested on twenty years of weather at five Indian solar parks.</span>
+            <span class="chapter-fig"><strong data-home="saving">38%</strong> cheaper than every 15 days</span>
+          </a>
+        </li>
+        <li>
+          <a href="about.html">
+            <img class="chapter-img" src="assets/thar-dunes.jpg" alt="Wind-rippled sand dunes in the Thar desert" loading="lazy" width="320" height="240">
+            <span class="chapter-name">About</span>
+            <span class="chapter-text">Why dust is a desert problem, the data behind Solara, and who built it.</span>
+            <span class="chapter-fig"><strong>45,754</strong> photographs, 5 parks</span>
+          </a>
+        </li>
+      </ul>
     </section>
   </main>
 
@@ -187,11 +102,10 @@
     <p class="close-name" aria-hidden="true">Solara</p>
     <div class="close-meta">
       <p>Ritu Ramesh, with Dr. Gargi. B.Tech Artificial Intelligence and Data Science, Amrita Vishwa Vidyapeetham.</p>
-      <p>Images and power-loss labels: DeepSolarEye dataset, Mehta et al., WACV 2018, used under CC BY-NC-SA. Photographs via Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:AMP_Energy_Bhadla_Solar_Power_Plant_-_53700156579.jpg">"AMP Energy Bhadla Solar Power Plant"</a> by Sarvajanik Puralekh, CC BY-SA 2.0; <a href="https://commons.wikimedia.org/wiki/File:Cleaning_solar_panel.jpg">"Cleaning solar panel"</a> by Deo photographer, CC BY-SA 4.0. Weather: NASA Langley Research Center POWER Project. Panel rendered in three.js.</p>
+      <p>Data, photographs and the desert-dusk light in the 3D scene are credited on the <a href="about.html#credits">About page</a>.</p>
     </div>
   </footer>
 
-  <script type="module" src="js/main.js"></script>
-  <script type="module" src="js/schedule.js"></script>
+  <script type="module" src="js/home.js"></script>
 </body>
 </html>

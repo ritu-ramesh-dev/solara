@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schedule: Solara</title>
+  <meta name="description" content="Module 3 of Solara: deciding each morning whether to wash the panels, tested on 20 years of weather at five Indian solar parks.">
+  <meta name="theme-color" content="#050505">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+  <header class="bar">
+    <a class="wordmark" href="./">Solara</a>
+    <nav aria-label="Pages">
+      <a href="detect.html">Detect</a>
+      <a href="predict.html">Predict</a>
+      <a href="schedule.html" aria-current="page">Schedule</a>
+      <a href="about.html">About</a>
+    </nav>
+    <a class="bar-action" href="https://github.com/ritu-ramesh-dev/solara">Code on GitHub</a>
+  </header>
+
+  <main>
+    <header class="page-head">
+      <div>
+        <h1>Schedule</h1>
+        <p class="section-lede" id="schedule-lede">Module 3 decides each morning whether washing the panels is worth it, from Module 2's reading of the dust, the expected sunshine and a three-day rain forecast.</p>
+        <a class="button page-action" href="https://github.com/ritu-ramesh-dev/solara/tree/main/module3_scheduling">See the code</a>
+      </div>
+      <p class="page-fig"><span class="fig-num" id="schedule-saving">–</span> <span class="fig-label">cheaper than washing every 15 days, averaged over five Indian parks</span></p>
+    </header>
+
+    <section class="schedule" id="schedule" aria-labelledby="schedule-title">
+      <h2 id="schedule-title">When to wash, park by park</h2>
+      <div class="park-picker" role="radiogroup" aria-label="Solar park" id="park-picker"></div>
+      <div class="schedule-body">
+        <figure class="timeline">
+          <svg id="timeline" viewBox="0 0 760 320" role="img" aria-labelledby="timeline-caption"></svg>
+          <figcaption id="timeline-caption">Soiling loss through one year. Ticks under the chart mark washes; blue bars are rain.</figcaption>
+        </figure>
+        <div class="park-facts">
+          <p class="park-name" id="park-name">–</p>
+          <div class="park-figures">
+            <p><span class="fig-num" id="park-saving">–</span> <span class="fig-label">saved per MW each year compared with washing every 15 days</span></p>
+            <p><span class="fig-num" id="park-washes">–</span> <span class="fig-label" id="park-washes-label">washes a year</span></p>
+            <p><span class="fig-num" id="park-water">–</span> <span class="fig-label">litres of water saved per MW each year</span></p>
+          </div>
+          <p class="park-next" id="park-next"></p>
+        </div>
+      </div>
+      <table class="models policies">
+        <caption id="policies-caption">Every policy at this park, test years 2020 to 2024</caption>
+        <thead><tr><th scope="col">Policy</th><th scope="col">Washes a year</th><th scope="col">Energy lost (MWh)</th><th scope="col">Cost a year (₹)</th><th scope="col">vs 15-day</th></tr></thead>
+        <tbody id="policies-body"><tr><td colspan="5">Loading results.</td></tr></tbody>
+      </table>
+    </section>
+
+    <section class="method" aria-labelledby="method-title">
+      <div class="method-head">
+        <h2 id="method-title">How the test works</h2>
+        <figure class="method-photo">
+          <img src="assets/cleaning-panels.jpg" alt="A worker in a hard hat cleaning a row of solar panels with a long-handled mop" width="1920" height="1280" loading="lazy">
+          <figcaption>Each wash costs labour and water, so Solara only books one when it pays.</figcaption>
+        </figure>
+      </div>
+      <div class="method-grid">
+        <div>
+          <h3>Real weather</h3>
+          <p>Daily sunshine, rain and airborne dust from NASA POWER for each park, 2005 to 2024. Every policy is tuned on 2005 to 2019 and judged on 2020 to 2024.</p>
+        </div>
+        <div>
+          <h3>Indian soiling</h3>
+          <p>On dry days dust costs about 0.4% of output a day, the rate measured in Delhi, Gandhinagar and north India, rising with the dust in the air. Rain of 5 mm or more washes most of it off.</p>
+        </div>
+        <div>
+          <h3>Rupees and litres</h3>
+          <p>Lost energy is worth ₹2.60 per kWh. One wash of a megawatt costs about ₹9,500 in labour and 15,000 litres of water.</p>
+        </div>
+        <div>
+          <h3>Modules 1 and 2 in the loop</h3>
+          <p>The scheduler never sees the true dust. It sees Module 2's daily reading, with Module 2's real measured error, re-zeroed after each wash.</p>
+        </div>
+      </div>
+      <div class="method-photos">
+        <figure>
+          <img src="assets/thar-dunes.jpg" alt="Wind-rippled sand dunes under a clear sky in the Thar desert" width="1920" height="1238" loading="lazy">
+          <figcaption>Desert sand: the dust that settles at Bhadla and Charanka.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/bhadla-solar-park.jpg" alt="Long rows of solar panels on sandy ground at Bhadla Solar Park, Rajasthan" width="1920" height="1080" loading="lazy">
+          <figcaption>Bhadla Solar Park, the driest of the five parks: about 380 mm of rain a year.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/karnataka-solar-plant.jpg" alt="A solar plant among farmland in Karnataka, seen from the air" width="1920" height="1080" loading="lazy">
+          <figcaption>Karnataka, home of Pavagada, where monsoon rain does part of the cleaning.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <nav class="pager" aria-label="Chapters">
+      <a href="predict.html" class="pager-prev" data-label="Previous">Predict</a>
+      <a href="about.html" class="pager-next" data-label="Next">About</a>
+    </nav>
+  </main>
+
+  <footer class="close">
+    <p class="close-name" aria-hidden="true">Solara</p>
+    <div class="close-meta">
+      <p>Ritu Ramesh, with Dr. Gargi. B.Tech Artificial Intelligence and Data Science, Amrita Vishwa Vidyapeetham.</p>
+      <p>Weather: NASA Langley Research Center POWER Project. All credits on the <a href="about.html#credits">About page</a>.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/schedule.js"></script>
+</body>
+</html>

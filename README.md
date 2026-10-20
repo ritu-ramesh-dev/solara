@@ -221,16 +221,24 @@ All assumptions (tariff, wash cost, water, soiling rate, rain thresholds, sites)
 
 ## Website
 
-The site is published at **https://ritu-ramesh-dev.github.io/solara/**. Every push to `main` that changes `website/` redeploys it through GitHub Actions (`.github/workflows/pages.yml`).
+**Live: https://ritu-ramesh-dev.github.io/solara/**
 
-To preview changes locally before pushing:
+| Page | What it shows |
+|---|---|
+| [Home](https://ritu-ramesh-dev.github.io/solara/) | A real-time 3D solar module you can drag to turn, lit by a sun that follows the cursor; shortcuts to every chapter |
+| [Detect](https://ritu-ramesh-dev.github.io/solara/detect.html) | Module 1: accuracy, confusion matrix, test photographs, the dataset |
+| [Predict](https://ritu-ramesh-dev.github.io/solara/predict.html) | Module 2: every model compared, predicted vs measured scatter, six test photographs with their readings |
+| [Schedule](https://ritu-ramesh-dev.github.io/solara/schedule.html) | Module 3: pick a park, see a year of soiling and washes, the savings and the next wash date |
+| [About](https://ritu-ramesh-dev.github.io/solara/about.html) | Why dust matters in India, the project, all credits |
+
+**The 3D panel** is built in three.js to the datasheet of the 540-550 Wp modules now installed at Indian utility parks: 144 half-cut M10 mono PERC cells (182 × 91 mm), 10 busbars, 2279 × 1134 × 35 mm, C-profile aluminium frame, three split junction boxes, cables and MC4 connectors, and a rating label on the back. All surfaces are drawn procedurally at real scale. Its reflections come from a real HDRI sky ("Aarfontein Dusk", Poly Haven, CC0). The dust on the glass is Module 3's simulated soiling at Bhadla Solar Park, and the scene adds dust motes in the sunbeam, bloom, film grain and a vignette.
+
+Every push to `main` that changes `website/` redeploys the site through GitHub Actions (`.github/workflows/pages.yml`). To preview locally:
 
 ```bash
 python -m http.server 8000 --directory website
 # open http://localhost:8000
 ```
-
-Built with three.js. The solar panel is generated procedurally: 60 monocrystalline cells with busbars and fingers, white backsheet, anodised aluminium frame and anti-reflective glass. The **Detect** tab lets you dust the panel at each severity level.
 
 ## Repository layout
 
