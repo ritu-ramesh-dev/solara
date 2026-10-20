@@ -7,7 +7,7 @@ Dust, pollen and bird droppings on photovoltaic panels cut their output, sometim
 | Module | What it does | Status |
 |---|---|---|
 | 1. Detect | CNN that classifies a panel image by soiling severity | Done |
-| 2. Predict | Regression of the exact power loss (%) caused by the soiling | Planned |
+| 2. Predict | Regression of the exact power loss (%) caused by the soiling | Done |
 | 3. Schedule | Cost-benefit / learned cleaning schedule vs. fixed-interval baseline | Planned |
 
 The project website (`website/`) is a single page with a real-time 3D solar panel lit by a sun that follows your cursor.
@@ -93,6 +93,63 @@ python -m module1_detection.predict path/to/panel.jpg # classify your own image 
 
 Settings (class thresholds, irradiance cut-off, split mode, epochs, learning rates) live in [`module1_detection/config.py`](module1_detection/config.py).
 
+## Module 2: power-loss prediction
+
+Module 2 predicts the **percentage of power lost** to soiling, a continuous number, instead of a class. Inputs are the panel photograph plus the environmental data DeepSolarEye records for every image: **irradiance** and **time of day** (encoded as sine and cosine so 23:59 sits next to 00:00). It uses the same images and the same train/val/test split as Module 1, so the scores are directly comparable.
+
+### Models
+
+| Model | Inputs | How |
+|---|---|---|
+| Mean baseline | none | always predicts the training mean |
+| XGBoost, environment only | irradiance, time | shows what can be predicted *without* looking at the panel |
+| Random Forest | image + env | 1280-d Module 1 embedding, reduced to 64 PCA components, plus environment |
+| XGBoost | image + env | same features; early stopping on validation MAE |
+| CNN regressor | image + env | MobileNetV2 initialised from the Module 1 classifier, image features fused with a small environment branch, sigmoid output; Smooth L1 loss; frozen-backbone phase then full fine-tune |
+
+### Results
+
+Test set: 8,722 images. Errors are in **percentage points** of power loss.
+
+| Model | MAE | RMSE | R² | Binned accuracy | Binned macro F1 |
+|---|---|---|---|---|---|
+| Mean baseline | 25.25 | 29.00 | -0.000 | 8.1% | 0.037 |
+| XGBoost, environment only | 13.49 | 19.85 | 0.532 | 51.0% | 0.457 |
+| Random Forest, image + env | 3.79 | 7.64 | 0.931 | 75.7% | 0.695 |
+| XGBoost, image + env | 3.85 | 7.54 | 0.932 | 76.9% | 0.703 |
+| CNN regressor, image + env | 3.87 | 8.29 | 0.918 | 80.8% | 0.743 |
+
+*Binned* means the predicted loss is cut at Module 1's thresholds (5 / 15 / 30%) and scored as a four-class classifier. For comparison, the Module 1 classifier reaches 79.9% accuracy and 0.733 macro F1.
+
+MAE by soiling severity (percentage points):
+
+| Model | clean | light | moderate | heavy |
+|---|---|---|---|---|
+| XGBoost, environment only | 11.9 | 9.7 | 9.8 | 18.3 |
+| Random Forest, image + env | 3.5 | 2.9 | 5.7 | 4.2 |
+| XGBoost, image + env | 3.2 | 3.1 | 6.1 | 4.4 |
+| CNN regressor, image + env | 2.2 | 3.1 | 7.4 | 5.0 |
+
+![Model comparison](module2_powerloss/outputs/model_comparison.png)
+![Predicted vs measured](module2_powerloss/outputs/predicted_vs_actual.png)
+
+**Reading the results.**
+- The photograph carries the signal. The environment-only model's error (13.5) is about 3.5 times higher than any image model's.
+- The three image models are close: about 3.8 to 3.9 points MAE and R² of about 0.92 to 0.93. Random Forest has the lowest MAE, XGBoost the lowest RMSE (fewer large misses) and the CNN the lowest error on clean panels.
+- Predicting the number and then binning it classifies soiling **better than the Module 1 classifier**: the CNN regressor reaches 80.8% accuracy and 0.743 macro F1. The regression target keeps the ordering between classes that a plain classifier throws away.
+- *Moderate* soiling (15–30%) remains the hardest range for every model.
+
+### Run it
+
+```bash
+python -m module2_powerloss.train_cnn      # CNN regressor (starts from the Module 1 weights)
+python -m module2_powerloss.features       # cache Module 1 embeddings for the tree models
+python -m module2_powerloss.train_trees    # baselines, Random Forest, XGBoost
+python -m module2_powerloss.evaluate       # compare all models, write figures
+python -m module2_powerloss.export_site    # publish to the website
+python -m module2_powerloss.predict panel.jpg --irradiance 0.45 --time 12:30
+```
+
 ---
 
 ## Website
@@ -108,6 +165,7 @@ Built with three.js. The solar panel is generated procedurally: 60 monocrystalli
 
 ```
 module1_detection/   data preparation, model, training, evaluation, prediction
+module2_powerloss/   power-loss regression: CNN, Random Forest, XGBoost, baselines
   outputs/           metrics.json, confusion matrix, training curves, sample predictions
 website/             project website (three.js)
 data/                dataset (downloaded, not committed)

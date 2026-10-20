@@ -25,7 +25,8 @@
     <nav aria-label="Sections">
       <a href="#modules">Modules</a>
       <a href="#why">Why</a>
-      <a href="#results">Results</a>
+      <a href="#results">Detection</a>
+      <a href="#power">Power loss</a>
       <a href="#data">Data</a>
     </nav>
     <a class="bar-action" href="https://github.com/ritu-ramesh-dev/solara">Code on GitHub</a>
@@ -67,8 +68,8 @@
         </div>
 
         <div role="tabpanel" id="pane-predict" aria-labelledby="tab-predict" class="pane" hidden>
-          <p>Next, the same network learns to put a number on it: the exact percentage of power the dust is taking, checked against the panel's measured output.</p>
-          <p class="status">In progress: Module 2, power-loss regression on DeepSolarEye's measured loss labels.</p>
+          <p>The same network then puts a number on it: the percentage of power the dust is taking, learned from the panel's measured output together with the irradiance and the time of day.</p>
+          <p class="status" id="predict-status">Module 2 compares a CNN regressor with Random Forest and XGBoost models. <a href="#power">See the results</a>.</p>
         </div>
 
         <div role="tabpanel" id="pane-schedule" aria-labelledby="tab-schedule" class="pane" hidden>
@@ -111,6 +112,26 @@
         </figure>
         <div class="samples" id="samples"></div>
       </div>
+    </section>
+
+    <section class="power" id="power" aria-labelledby="power-title">
+      <div class="power-copy">
+        <h2 id="power-title">How much power it costs</h2>
+        <p class="section-lede" id="power-lede">Module 2 puts a number on the dust: the share of the panel's power that is lost, predicted from the photograph, the irradiance and the time of day.</p>
+        <div class="power-figures">
+          <p><span class="fig-num" data-power="mae">–</span> <span class="fig-label">average error, in percentage points of power</span></p>
+          <p><span class="fig-num" data-power="r2">–</span> <span class="fig-label">R², share of the variation in loss explained</span></p>
+        </div>
+        <table class="models">
+          <caption>Every model, on the same test photographs</caption>
+          <thead><tr><th scope="col">Model</th><th scope="col">MAE</th><th scope="col">RMSE</th><th scope="col">R²</th></tr></thead>
+          <tbody id="models-body"><tr><td colspan="4">Results are on their way.</td></tr></tbody>
+        </table>
+      </div>
+      <figure class="scatter">
+        <svg id="scatter" viewBox="0 0 440 440" role="img" aria-labelledby="scatter-caption"></svg>
+        <figcaption id="scatter-caption">Predicted against measured power loss for test photographs. Points on the diagonal are exact.</figcaption>
+      </figure>
     </section>
 
     <section class="data" id="data" aria-labelledby="data-title">

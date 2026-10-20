@@ -10,3 +10,4 @@ seaborn
 pillow
 tqdm
 gdown
+xgboost

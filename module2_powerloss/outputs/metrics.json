@@ -1,0 +1,80 @@
+{
+  "test_images": 8722,
+  "best_model": "random_forest",
+  "models": {
+    "mean_baseline": {
+      "label": "Mean baseline",
+      "mae": 25.25414065126024,
+      "rmse": 28.99766273972671,
+      "r2": -0.00011174123147483783,
+      "mae_by_class": {
+        "clean": 24.53179508190666,
+        "light": 17.00149025043735,
+        "moderate": 6.356063501168747,
+        "heavy": 35.684237257112116
+      },
+      "binned_accuracy": 0.08083008484292593,
+      "binned_macro_f1": 0.037392595735652914
+    },
+    "env_xgboost": {
+      "label": "XGBoost, environment only",
+      "mae": 13.492536513245268,
+      "rmse": 19.846711826866198,
+      "r2": 0.5315107126344383,
+      "mae_by_class": {
+        "clean": 11.908217996343526,
+        "light": 9.71010853861088,
+        "moderate": 9.793438900108226,
+        "heavy": 18.285188423174237
+      },
+      "binned_accuracy": 0.5104333868378812,
+      "binned_macro_f1": 0.45712606036002346
+    },
+    "random_forest": {
+      "label": "Random Forest, image + env",
+      "mae": 3.787245051400892,
+      "rmse": 7.640083412882407,
+      "r2": 0.9305745445888643,
+      "mae_by_class": {
+        "clean": 3.4565352886173635,
+        "light": 2.9227093936224513,
+        "moderate": 5.690650426288455,
+        "heavy": 4.232502432903292
+      },
+      "binned_accuracy": 0.7570511350607659,
+      "binned_macro_f1": 0.6945712244148051
+    },
+    "xgboost": {
+      "label": "XGBoost, image + env",
+      "mae": 3.8480888138491918,
+      "rmse": 7.5381943878575575,
+      "r2": 0.9324139287426852,
+      "mae_by_class": {
+        "clean": 3.2150016488874487,
+        "light": 3.0853992913473873,
+        "moderate": 6.1162888687595744,
+        "heavy": 4.416699583361213
+      },
+      "binned_accuracy": 0.768745700527402,
+      "binned_macro_f1": 0.7026658976821637
+    },
+    "cnn": {
+      "label": "CNN regressor, image + env",
+      "mae": 3.8719032116743914,
+      "rmse": 8.287781478917342,
+      "r2": 0.9183043146747234,
+      "mae_by_class": {
+        "clean": 2.2448116855988838,
+        "light": 3.136010256791928,
+        "moderate": 7.359704140717726,
+        "heavy": 5.046730992186196
+      },
+      "binned_accuracy": 0.8076129328135748,
+      "binned_macro_f1": 0.7431970069767769
+    }
+  },
+  "module1_classifier": {
+    "accuracy": 0.7992432928227471,
+    "macro_f1": 0.7327066703722278
+  }
+}

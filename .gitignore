@@ -13,6 +13,7 @@ venv/
 *.pth
 *.onnx
 !module1_detection/outputs/mobilenetv2_soiling.pt
+!module2_powerloss/outputs/powerloss_cnn.pt
 
 # Tooling
 .taste-skill/
@@ -21,3 +22,7 @@ venv/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Rebuilt in seconds by module2_powerloss/train_trees.py
+module2_powerloss/outputs/xgboost.json
+module2_powerloss/outputs/tree_test_predictions.csv

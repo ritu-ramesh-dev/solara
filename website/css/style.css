@@ -201,6 +201,32 @@ main, .close { position: relative; z-index: 1; }
 .sample figcaption span:last-child { color: var(--ink-2); }
 .sample.miss figcaption span:last-child { color: var(--sun); }
 
+/* ---- power loss ------------------------------------------------------------------------ */
+.power {
+  background: var(--ground);
+  padding: var(--gap-section) var(--margin) 0;
+  display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(32px, 5vw, 96px);
+  align-items: start;
+}
+.power h2 { margin: 0; font: 300 clamp(44px, 6vw, 86px)/1 var(--display); letter-spacing: -0.01em; }
+.power-figures { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 48px; }
+.power-figures p { margin: 0; background: var(--ground-3); padding: 28px; display: flex; flex-direction: column; gap: 12px; }
+.models { width: 100%; margin-top: 48px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.models caption { text-align: left; font: 400 26px/1.2 var(--display); padding-bottom: 14px; }
+.models th, .models td { text-align: right; padding: 14px; font-size: 14px; }
+.models th:first-child { text-align: left; }
+.models thead th { font-weight: 500; color: var(--ink-2); }
+.models tbody th, .models tbody td { background: var(--ground-2); border-top: 4px solid var(--ground); font-weight: 400; }
+.models tbody tr.best th, .models tbody tr.best td { background: var(--sun); color: var(--sun-ink); font-weight: 600; }
+.scatter { margin: 0; position: sticky; top: 96px; }
+.scatter svg { width: 100%; height: auto; display: block; }
+.scatter .plot-bg { fill: var(--ground-2); }
+.scatter .tick { fill: var(--ink-2); font: 400 12px var(--text); }
+.scatter .axis { fill: var(--ink); font: 500 13px var(--text); }
+.scatter .diag { stroke: var(--ink-2); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.scatter .dots circle { fill: var(--sun); fill-opacity: 0.38; }
+.scatter figcaption { margin-top: 12px; font-size: 14px; color: var(--ink-2); max-width: 52ch; }
+
 /* ---- data ---------------------------------------------------------------------------- */
 .data {
   display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(32px, 5vw, 96px);
@@ -238,7 +264,8 @@ main, .close { position: relative; z-index: 1; }
   .bar nav { display: none; }
   .modules { grid-template-columns: 1fr; align-items: end; padding-top: 52vh; }
   .modules-copy { background: rgb(5 5 5 / 0.72); padding: 24px 0; }
-  .results-body, .data, .why-body { grid-template-columns: 1fr; }
+  .results-body, .data, .why-body, .power { grid-template-columns: 1fr; }
+  .scatter { position: static; }
   .why-wide img { aspect-ratio: 4 / 3; }
   .figures { grid-template-columns: 1fr; gap: 10px; }
   .figures p { padding: 20px; }

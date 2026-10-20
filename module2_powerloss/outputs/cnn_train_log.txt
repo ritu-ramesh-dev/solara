@@ -1,0 +1,21 @@
+Device: cuda
+train:  31399 images
+val  :   3489 images
+test :   8722 images
+[head  1/3] train MAE 5.57 RMSE 10.52 | val MAE 5.45 RMSE 10.25 (138s)  * saved
+[head  2/3] train MAE 4.58 RMSE 9.16 | val MAE 5.53 RMSE 10.52 (88s)
+[head  3/3] train MAE 4.44 RMSE 9.03 | val MAE 5.39 RMSE 10.05 (87s)  * saved
+[finetune  1/12] train MAE 4.36 RMSE 9.06 | val MAE 4.60 RMSE 9.54 (91s)  * saved
+[finetune  2/12] train MAE 4.14 RMSE 8.86 | val MAE 4.76 RMSE 9.76 (102s)
+[finetune  3/12] train MAE 4.05 RMSE 8.79 | val MAE 4.24 RMSE 9.28 (98s)  * saved
+[finetune  4/12] train MAE 3.98 RMSE 8.71 | val MAE 4.17 RMSE 9.28 (111s)  * saved
+[finetune  5/12] train MAE 3.92 RMSE 8.60 | val MAE 4.21 RMSE 9.14 (115s)
+[finetune  6/12] train MAE 3.87 RMSE 8.56 | val MAE 4.23 RMSE 9.15 (71s)
+[finetune  7/12] train MAE 3.82 RMSE 8.46 | val MAE 4.18 RMSE 9.18 (65s)
+[finetune  8/12] train MAE 3.80 RMSE 8.47 | val MAE 4.25 RMSE 9.16 (65s)
+[finetune  9/12] train MAE 3.77 RMSE 8.36 | val MAE 4.14 RMSE 9.16 (64s)  * saved
+[finetune 10/12] train MAE 3.72 RMSE 8.34 | val MAE 4.11 RMSE 9.06 (64s)  * saved
+[finetune 11/12] train MAE 3.71 RMSE 8.32 | val MAE 4.13 RMSE 9.08 (64s)
+[finetune 12/12] train MAE 3.68 RMSE 8.24 | val MAE 4.09 RMSE 9.08 (63s)  * saved
+Best val MAE: 4.094 percentage points. Checkpoint: C:\Users\RITU RAMESH\Documents\PROJECTS\COMPUTATIONAL MECHANICS\solara\module2_powerloss\outputs\powerloss_cnn.pt
+EXIT 0
