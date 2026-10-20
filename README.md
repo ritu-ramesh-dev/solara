@@ -2,6 +2,8 @@
 
 **AI-based solar panel soiling detection, power-loss prediction and intelligent cleaning scheduling.**
 
+**Live site: https://ritu-ramesh-dev.github.io/solara/**
+
 Dust, pollen and bird droppings on photovoltaic panels cut their output, sometimes by more than 40% in dusty regions. Most sites still clean on a fixed calendar, which wastes water when panels are clean and loses energy when they are dirty. Solara replaces the calendar with three connected models:
 
 | Module | What it does | Status |
@@ -218,6 +220,10 @@ All assumptions (tariff, wash cost, water, soiling rate, rain thresholds, sites)
 ---
 
 ## Website
+
+The site is published at **https://ritu-ramesh-dev.github.io/solara/**. Every push to `main` that changes `website/` redeploys it through GitHub Actions (`.github/workflows/pages.yml`).
+
+To preview changes locally before pushing:
 
 ```bash
 python -m http.server 8000 --directory website
