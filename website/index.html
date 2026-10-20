@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solara: Solar Soiling AI</title>
+  <meta name="description" content="Solara detects dust on solar panels with a CNN, predicts the power it costs and schedules cleaning only when it pays.">
+  <meta name="theme-color" content="#050505">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+  <canvas id="stage" aria-hidden="true"></canvas>
+  <img class="stage-fallback" src="assets/hero-poster.jpg" alt="" aria-hidden="true">
+
+  <header class="bar">
+    <a class="wordmark" href="#top">Solara</a>
+    <nav aria-label="Sections">
+      <a href="#modules">Modules</a>
+      <a href="#results">Results</a>
+      <a href="#data">Data</a>
+    </nav>
+    <a class="bar-action" href="https://github.com/ritu-ramesh-dev/solara">Code on GitHub</a>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <h1 class="title">Solara</h1>
+        <p class="lede">AI that finds dust on solar panels, measures the power it costs, and says when cleaning is worth it.</p>
+        <div class="hero-actions">
+          <a class="button" href="#modules">See how it works</a>
+          <p class="hint">Move your cursor: you are the sun.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="modules" id="modules" aria-labelledby="modules-title">
+      <div class="modules-copy">
+        <h2 id="modules-title" class="visually-hidden">The three modules</h2>
+        <div class="tabs" role="tablist" aria-label="Modules">
+          <button role="tab" id="tab-detect" aria-controls="pane-detect" aria-selected="true">Detect</button>
+          <button role="tab" id="tab-predict" aria-controls="pane-predict" aria-selected="false" tabindex="-1">Predict</button>
+          <button role="tab" id="tab-schedule" aria-controls="pane-schedule" aria-selected="false" tabindex="-1">Schedule</button>
+        </div>
+
+        <div role="tabpanel" id="pane-detect" aria-labelledby="tab-detect" class="pane">
+          <p>A MobileNetV2 network, fine-tuned on 45,754 photographs of a real panel, reads each image and names how dirty the glass is: clean, light, moderate or heavy soiling.</p>
+          <fieldset class="soil-picker">
+            <legend>Dust the panel</legend>
+            <div class="soil-options">
+              <label><input type="radio" name="soil" value="0" checked><span>Clean</span></label>
+              <label><input type="radio" name="soil" value="1"><span>Light</span></label>
+              <label><input type="radio" name="soil" value="2"><span>Moderate</span></label>
+              <label><input type="radio" name="soil" value="3"><span>Heavy</span></label>
+            </div>
+            <p class="soil-readout" aria-live="polite"><strong id="soil-loss">under 5%</strong> of the panel's power lost</p>
+          </fieldset>
+        </div>
+
+        <div role="tabpanel" id="pane-predict" aria-labelledby="tab-predict" class="pane" hidden>
+          <p>Next, the same network learns to put a number on it: the exact percentage of power the dust is taking, checked against the panel's measured output.</p>
+          <p class="status">In progress: Module 2, power-loss regression on DeepSolarEye's measured loss labels.</p>
+        </div>
+
+        <div role="tabpanel" id="pane-schedule" aria-labelledby="tab-schedule" class="pane" hidden>
+          <p>Then Solara weighs the energy a cleaning would win back against the water, labour and downtime it costs, and books the cleaning only when it pays.</p>
+          <p class="status">In progress: Module 3, compared against fixed-interval and threshold cleaning.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="results" id="results" aria-labelledby="results-title">
+      <h2 id="results-title">How well it sees dust</h2>
+      <p class="section-lede" id="results-lede">Scores on days the network never saw during training.</p>
+      <dl class="figures" id="figures">
+        <div><dt>Accuracy</dt><dd data-metric="accuracy">–</dd></div>
+        <div><dt>Macro F1</dt><dd data-metric="macro_f1">–</dd></div>
+        <div><dt>Test images</dt><dd data-metric="test_images">–</dd></div>
+      </dl>
+      <div class="results-body">
+        <figure class="matrix">
+          <table id="confusion" aria-describedby="confusion-caption"></table>
+          <figcaption id="confusion-caption">Confusion matrix on the test days. Rows are the true class, columns the prediction; each cell shows the share of that row.</figcaption>
+        </figure>
+        <div class="samples" id="samples"></div>
+      </div>
+    </section>
+
+    <section class="data" id="data" aria-labelledby="data-title">
+      <div class="data-copy">
+        <h2 id="data-title">Trained on DeepSolarEye</h2>
+        <p>One panel, photographed every few minutes for weeks while dust settled and was cleaned away. Every photograph carries the power the panel lost at that moment, measured against a clean reference panel beside it.</p>
+        <p>Solara turns that measured loss into four classes. Photographs taken in dim light, where the loss reading is unreliable, are left out.</p>
+        <p>Whole days are kept apart for testing, so the network is judged on days it has never seen rather than on near-copies of frames it trained on.</p>
+      </div>
+      <table class="bins">
+        <caption>From measured power loss to class</caption>
+        <thead><tr><th scope="col">Class</th><th scope="col">Power lost</th><th scope="col">Images</th></tr></thead>
+        <tbody id="bins-body">
+          <tr><td>Clean</td><td>under 5%</td><td data-count="clean">–</td></tr>
+          <tr><td>Light</td><td>5 to 15%</td><td data-count="light">–</td></tr>
+          <tr><td>Moderate</td><td>15 to 30%</td><td data-count="moderate">–</td></tr>
+          <tr><td>Heavy</td><td>over 30%</td><td data-count="heavy">–</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="close">
+    <p class="close-name" aria-hidden="true">Solara</p>
+    <div class="close-meta">
+      <p>Ritu Ramesh, with Dr. Gargi. B.Tech Artificial Intelligence and Data Science, Amrita Vishwa Vidyapeetham.</p>
+      <p>Images and power-loss labels: DeepSolarEye dataset, Mehta et al., WACV 2018, used under CC BY-NC-SA. Panel rendered in three.js.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

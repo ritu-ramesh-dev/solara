@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Dataset (CC BY-NC-SA, download it with prepare_data.py instead of committing it)
+data/
+
+# Large model weights
+*.pt
+*.pth
+*.onnx
+
+# Tooling
+.taste-skill/
+.claude/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
