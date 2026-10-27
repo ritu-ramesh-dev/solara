@@ -280,6 +280,6 @@ data/                dataset (downloaded, not committed)
 
 ## Author
 
-Ritu Ramesh, B.Tech Artificial Intelligence and Data Science, Amrita Vishwa Vidyapeetham, with Dr. Gargi.
+Ritu Ramesh, B.Tech Artificial Intelligence and Data Science.
 
 Code: MIT licence. The DeepSolarEye dataset belongs to its authors and is used under CC BY-NC-SA. It is not redistributed here.
