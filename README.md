@@ -232,6 +232,15 @@ Visitors upload photographs of their own panels and get a cleaning date. Everyth
 
 The models in `website/models/` are exported by `python -m tools.export_onnx`. The script reads the PyTorch checkpoints with plain Python and NumPy and writes MobileNetV2 directly as ONNX with half-precision weights (5.1 MB each), so it runs even where PyTorch cannot. On 48 test photographs, the exported models give the same class as PyTorch for every photograph, and power-loss readings within 0.12 percentage points. The page logic is tested with `node --test tools/test_panels_core.mjs` (14 tests).
 
+**End-to-end tests.** `tools/site_tests.mjs` drives headless Chrome through five checks:
+1. every live page loads cleanly;
+2. the upload limits refuse small, dark, duplicate and too-few-days photographs;
+3. phone-style photographs with camera dates become a schedule;
+4. the sample photographs read close to their measured loss, using the live forecast;
+5. the mid-review site runs offline from disk.
+
+Run it with `python -m tools.make_test_photos <dir>`, then `node tools/site_tests.mjs <chrome.exe> <dir> <mid-review/index.html>`.
+
 **Limits, stated on the page.** The networks learned from one panel under a fixed camera, so readings on other panels and cameras are estimates. The schedule relies most on how the dust changes from day to day, which is why the same camera position matters.
 
 ---
