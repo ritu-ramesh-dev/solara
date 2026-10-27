@@ -217,6 +217,23 @@ python -m module3_scheduling.export_site   # publish to the website
 
 All assumptions (tariff, wash cost, water, soiling rate, rain thresholds, sites) are in [`module3_scheduling/config.py`](module3_scheduling/config.py).
 
+## Your panels: plan a wash from your own photographs
+
+**https://ritu-ramesh-dev.github.io/solara/analyze.html**
+
+Visitors upload photographs of their own panels and get a cleaning date. Everything runs in the browser: the photographs never leave the device.
+
+1. **Checks.** At least 4 photographs (at most 40) from at least 3 different days. JPG, PNG or WebP, at least 192 px on the short side (the training resolution), up to 20 MB each. Duplicates are refused, and frames that are too dark or washed out are not used. Blurred frames are flagged.
+2. **Dates** come from the camera's EXIF data (a small JPEG reader in `panels-core.js`), else the file date. Every date can be corrected on the page.
+3. **Reading the dust.** Each photograph is centre-cropped to a square, as the training photographs were, then resized to 224 × 224. The Module 1 classifier and the Module 2 power-loss CNN then run with ONNX Runtime Web. Irradiance comes from the sky the visitor picks, and time of day from the photo's timestamp.
+4. **Trend.** The page takes one reading per day (the median of that day's photographs) and fits a Theil-Sen slope from the last sharp drop (a wash or rain) or from the last wash date the visitor gives. That slope is the soiling rate, bounded to 0.05 to 1.5 % per day. If the photographs show no build-up, it falls back to the Indian average of 0.4 % per day.
+5. **Schedule.** The page pulls the 16-day rain and sunshine forecast for the chosen location from Open-Meteo, then runs Module 3's Solara cost-benefit rule (13-day horizon, waiting for forecast rain) over 60 days. It reports the next wash date, today's loss and its cost, and the 60-day cost compared with washing every 15 days and with never washing. The report can be downloaded as CSV or printed to PDF.
+6. **Sample photographs.** A button loads 8 real DeepSolarEye photographs from 25 to 27 June 2017, re-dated to the last three days, so the demo always runs against the live forecast.
+
+The models in `website/models/` are exported by `python -m tools.export_onnx`. The script reads the PyTorch checkpoints with plain Python and NumPy and writes MobileNetV2 directly as ONNX with half-precision weights (5.1 MB each), so it runs even where PyTorch cannot. On 48 test photographs, the exported models give the same class as PyTorch for every photograph, and power-loss readings within 0.12 percentage points. The page logic is tested with `node --test tools/test_panels_core.mjs` (14 tests).
+
+**Limits, stated on the page.** The networks learned from one panel under a fixed camera, so readings on other panels and cameras are estimates. The schedule relies most on how the dust changes from day to day, which is why the same camera position matters.
+
 ---
 
 ## Website
@@ -225,6 +242,7 @@ All assumptions (tariff, wash cost, water, soiling rate, rain thresholds, sites)
 
 | Page | What it shows |
 |---|---|
+| [Your panels](https://ritu-ramesh-dev.github.io/solara/analyze.html) | Upload photographs of your own panels: dust reading, power lost and a wash date against the live forecast |
 | [Home](https://ritu-ramesh-dev.github.io/solara/) | Full-screen drone footage of a solar farm behind the title; shortcuts to every chapter |
 | [Detect](https://ritu-ramesh-dev.github.io/solara/detect.html) | Module 1: accuracy, confusion matrix, test photographs, the dataset |
 | [Predict](https://ritu-ramesh-dev.github.io/solara/predict.html) | Module 2: every model compared, predicted vs measured scatter, six test photographs with their readings |
@@ -247,7 +265,8 @@ module1_detection/   data preparation, model, training, evaluation, prediction
 module2_powerloss/   power-loss regression: CNN, Random Forest, XGBoost, baselines
 module3_scheduling/  cleaning scheduler: soiling simulator, policies, PPO, hindsight optimum
   outputs/           metrics.json, confusion matrix, training curves, sample predictions
-website/             project website (three.js)
+website/             project website; models/ holds the ONNX networks the browser runs
+tools/               ONNX export, demo-photo export, tests for the page logic
 data/                dataset (downloaded, not committed)
 ```
 

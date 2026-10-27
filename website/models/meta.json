@@ -1,0 +1,30 @@
+{
+  "class_names": [
+    "clean",
+    "light",
+    "moderate",
+    "heavy"
+  ],
+  "loss_bins_pct": [
+    5.0,
+    15.0,
+    30.0
+  ],
+  "img_size": 224,
+  "mean": [
+    0.485,
+    0.456,
+    0.406
+  ],
+  "std": [
+    0.229,
+    0.224,
+    0.225
+  ],
+  "env_features": [
+    "irradiance",
+    "tod_sin",
+    "tod_cos"
+  ],
+  "note": "Trained on DeepSolarEye (one panel, fixed camera). Irradiance is DeepSolarEye's normalised value (about 0-1)."
+}

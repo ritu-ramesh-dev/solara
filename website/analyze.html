@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your panels: Solara</title>
+  <meta name="description" content="Upload photographs of your own solar panels: Solara reads the dust in each one, measures the power it costs and plans your next wash against the real rain forecast.">
+  <meta name="theme-color" content="#050505">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+  <header class="bar">
+    <a class="wordmark" href="./">Solara</a>
+    <nav aria-label="Pages">
+      <a href="analyze.html" aria-current="page">Your panels</a>
+      <a href="detect.html">Detect</a>
+      <a href="predict.html">Predict</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="about.html">About</a>
+    </nav>
+    <a class="bar-action" href="https://github.com/ritu-ramesh-dev/solara">Code on GitHub</a>
+  </header>
+
+  <main>
+    <header class="page-head">
+      <div>
+        <h1>Your panels</h1>
+        <p class="section-lede">Photograph your own panels over a few days. Solara reads the dust in each photograph, works out the power it is costing you, and plans your next wash against the real rain forecast for your location.</p>
+        <a class="button page-action" href="#step-photos">Start with your photographs</a>
+      </div>
+      <p class="page-fig"><span class="fig-num">0</span> <span class="fig-label">photographs leave your device: the models run in your browser</span></p>
+    </header>
+
+    <form class="tool" id="tool" novalidate>
+      <section class="tool-step" aria-labelledby="step-photos">
+        <div class="step-head">
+          <h2 id="step-photos">Your photographs</h2>
+          <ul class="rules" id="rules">
+            <li>At least <strong>4 photographs</strong>, at most 40</li>
+            <li>From at least <strong>3 different days</strong>, so Solara can see the dust building up</li>
+            <li>JPG, PNG or WebP, at least 192 pixels on the short side, up to 20 MB each</li>
+            <li>Same panel, same spot, around midday; keep the panel in the middle of the frame</li>
+          </ul>
+        </div>
+        <figure class="examples">
+          <div class="example-row">
+            <img src="assets/demo-panels/2017-06-25_10.jpg" alt="Panel photographed in the morning, almost clean" width="192" height="192" loading="lazy">
+            <img src="assets/demo-panels/2017-06-25_12.jpg" alt="The same panel at midday the same day" width="192" height="192" loading="lazy">
+            <img src="assets/demo-panels/2017-06-26_12.jpg" alt="The same panel from the same spot a day later" width="192" height="192" loading="lazy">
+            <img src="assets/demo-panels/2017-06-27_12.jpg" alt="The same panel from the same spot two days later, dustier" width="192" height="192" loading="lazy">
+          </div>
+          <figcaption>Good photographs: one panel, the same camera position, around midday, on three days in a row. Solara reads the change between them.</figcaption>
+        </figure>
+
+        <div class="drop" id="drop">
+          <input type="file" id="files" accept="image/jpeg,image/png,image/webp" multiple class="visually-hidden">
+          <label for="files" class="drop-label">
+            <span class="drop-title">Drop photographs here</span>
+            <span class="drop-sub">or click to choose them. Dates come from the camera; you can correct them below.</span>
+          </label>
+          <div class="drop-actions">
+            <button type="button" class="button" id="pick">Choose photographs</button>
+            <button type="button" class="ghost" id="demo">Try sample photographs</button>
+            <button type="button" class="ghost" id="clear" hidden>Remove all</button>
+          </div>
+        </div>
+        <p class="status-line" id="photo-status" role="status" aria-live="polite"></p>
+        <ul class="thumbs" id="thumbs"></ul>
+      </section>
+
+      <section class="tool-step" aria-labelledby="step-plant">
+        <h2 id="step-plant">Your plant</h2>
+        <div class="fields">
+          <label class="field field-wide">
+            <span>Location (for the rain and sunshine forecast)</span>
+            <select id="place"></select>
+          </label>
+          <div class="field field-wide coords" id="coords" hidden>
+            <label><span>Latitude</span><input id="lat" type="number" step="0.01" min="-90" max="90" inputmode="decimal"></label>
+            <label><span>Longitude</span><input id="lon" type="number" step="0.01" min="-180" max="180" inputmode="decimal"></label>
+            <button type="button" class="ghost" id="locate">Use my location</button>
+          </div>
+          <label class="field">
+            <span>Kind of plant</span>
+            <select id="preset">
+              <option value="rooftop">Rooftop, home</option>
+              <option value="commercial">Rooftop, commercial</option>
+              <option value="utility">Utility solar park</option>
+            </select>
+          </label>
+          <label class="field"><span>Size (kWp)</span><input id="kwp" type="number" min="0.5" max="2000000" step="0.5" required></label>
+          <label class="field"><span>Value of a unit, ₹ per kWh</span><input id="tariff" type="number" min="0.5" max="50" step="0.1" required></label>
+          <label class="field"><span>Cost of one wash, ₹</span><input id="wash" type="number" min="1" max="10000000" step="1" required></label>
+          <label class="field">
+            <span>Sky when the photographs were taken</span>
+            <select id="sky">
+              <option value="bright">Bright sun</option>
+              <option value="hazy">Hazy or thin cloud</option>
+              <option value="overcast">Overcast</option>
+            </select>
+          </label>
+          <label class="field"><span>Last washed (optional)</span><input id="lastwash" type="date"></label>
+        </div>
+      </section>
+
+      <div class="run">
+        <button type="submit" class="button run-button" id="run" disabled>Read the photographs and plan</button>
+        <p class="status-line" id="run-status" role="status" aria-live="polite">Add your photographs to begin.</p>
+        <div class="progress" id="progress" hidden><span id="progress-bar"></span></div>
+      </div>
+    </form>
+
+    <section class="report" id="report" aria-labelledby="report-title" hidden>
+      <div class="report-head">
+        <h2 id="report-title">Your schedule</h2>
+        <p class="verdict" id="verdict"></p>
+        <p class="section-lede" id="verdict-why"></p>
+      </div>
+      <div class="report-figures" id="report-figures"></div>
+      <figure class="timeline plan-chart">
+        <svg id="plan-chart" viewBox="0 0 760 330" role="img" aria-labelledby="plan-caption"></svg>
+        <figcaption id="plan-caption"></figcaption>
+      </figure>
+      <div class="report-grid">
+        <table class="models readings">
+          <caption>What Solara read in each photograph</caption>
+          <thead><tr><th scope="col">Photograph</th><th scope="col">Taken</th><th scope="col">Soiling</th><th scope="col">Power lost</th></tr></thead>
+          <tbody id="readings-body"></tbody>
+        </table>
+        <div class="report-side">
+          <h3>Next 60 days, per plan</h3>
+          <table class="models compare" id="compare"></table>
+          <div class="report-actions">
+            <button type="button" class="button" id="csv">Download report (CSV)</button>
+            <button type="button" class="ghost" id="print">Print or save as PDF</button>
+          </div>
+          <p class="note" id="caveat">The networks learned from 45,754 photographs of one panel under a fixed camera (DeepSolarEye). On other panels and cameras the readings are an estimate: keep the camera position the same from day to day, because Solara relies most on how the dust changes, not on any single photograph.</p>
+        </div>
+      </div>
+    </section>
+
+    <nav class="pager" aria-label="Chapters">
+      <a href="./" class="pager-prev" data-label="Back to">Home</a>
+      <a href="detect.html" class="pager-next" data-label="How it works">Detect</a>
+    </nav>
+  </main>
+
+  <footer class="close">
+    <p class="close-name" aria-hidden="true">Solara</p>
+    <div class="close-meta">
+      <p>Ritu Ramesh, with Dr. Gargi. B.Tech Artificial Intelligence and Data Science, Amrita Vishwa Vidyapeetham.</p>
+      <p>Forecast: Open-Meteo. Models run with ONNX Runtime Web. Sample photographs: DeepSolarEye dataset, CC BY-NC-SA. All credits on the <a href="about.html#credits">About page</a>.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/panels.js"></script>
+</body>
+</html>

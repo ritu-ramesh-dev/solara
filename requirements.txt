@@ -13,3 +13,5 @@ gdown
 xgboost
 stable-baselines3
 gymnasium
+onnx
+onnxruntime

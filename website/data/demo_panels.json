@@ -1,0 +1,53 @@
+{
+  "source": "DeepSolarEye dataset (Mehta et al., WACV 2018), CC BY-NC-SA",
+  "photos": [
+    {
+      "src": "assets/demo-panels/2017-06-25_10.jpg",
+      "taken": "2017-06-25T10:29:17",
+      "irradiance": 0.341,
+      "measuredLossPct": 1.15
+    },
+    {
+      "src": "assets/demo-panels/2017-06-25_12.jpg",
+      "taken": "2017-06-25T12:15:50",
+      "irradiance": 0.344,
+      "measuredLossPct": 1.22
+    },
+    {
+      "src": "assets/demo-panels/2017-06-26_10.jpg",
+      "taken": "2017-06-26T10:15:12",
+      "irradiance": 0.43,
+      "measuredLossPct": 2.81
+    },
+    {
+      "src": "assets/demo-panels/2017-06-26_12.jpg",
+      "taken": "2017-06-26T12:12:22",
+      "irradiance": 0.721,
+      "measuredLossPct": 2.7
+    },
+    {
+      "src": "assets/demo-panels/2017-06-26_14.jpg",
+      "taken": "2017-06-26T14:31:40",
+      "irradiance": 0.311,
+      "measuredLossPct": 1.08
+    },
+    {
+      "src": "assets/demo-panels/2017-06-27_10.jpg",
+      "taken": "2017-06-27T10:59:13",
+      "irradiance": 0.602,
+      "measuredLossPct": 3.76
+    },
+    {
+      "src": "assets/demo-panels/2017-06-27_12.jpg",
+      "taken": "2017-06-27T12:55:36",
+      "irradiance": 0.694,
+      "measuredLossPct": 3.77
+    },
+    {
+      "src": "assets/demo-panels/2017-06-27_14.jpg",
+      "taken": "2017-06-27T14:27:44",
+      "irradiance": 0.427,
+      "measuredLossPct": 3.81
+    }
+  ]
+}
